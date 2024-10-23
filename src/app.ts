@@ -1,5 +1,8 @@
 import express, { Application, NextFunction, Request, Response } from "express";
 import cors from "cors";
+import { router } from "./app/routes";
+import globalErrorHandler from "./app/middlewares/globalErrorHandler";
+import notFound from "./app/middlewares/notFound";
 
 const app: Application = express();
 
@@ -15,16 +18,11 @@ app.get("/", (req: Request, res: Response, next: NextFunction) => {
   }
 });
 
-app.all("*", (req: Request, res: Response) => {
-  res.send({
-    success: false,
-    message: "Invalid route",
-  });
-});
+// Location routes
+app.use("/api", router);
 
-app.use((err: Error, req: Request, res: Response) => {
-  console.error(err);
-  res.status(500).send("Something went wrong!");
-});
+app.use(globalErrorHandler);
+
+app.use(notFound);
 
 export default app;
