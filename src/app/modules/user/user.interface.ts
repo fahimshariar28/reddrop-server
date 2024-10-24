@@ -8,6 +8,10 @@ type Address = {
   upazila: string;
   homeAddress: string;
 };
+type ISocialLink = {
+  provider: string;
+  id?: string;
+};
 
 // User interface
 export type IUser = {
@@ -17,6 +21,9 @@ export type IUser = {
   name: string;
   email: string;
   password: string; // Should be a hashed password
+  needPasswordReset: boolean;
+  socialLogin: boolean;
+  socialLink?: ISocialLink[]; // Array of objects of Social login link
   number: string;
   bloodGroup: (typeof BloodGroup)[keyof typeof BloodGroup];
   plasma: boolean;

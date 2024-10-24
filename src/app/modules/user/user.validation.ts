@@ -9,6 +9,11 @@ const addressSchema = z.object({
   homeAddress: z.string().optional(), // Optional home address
 });
 
+const socialLinkSchema = z.object({
+  provider: z.string().min(1, "Provider is required"),
+  id: z.string().optional(),
+});
+
 // Zod schema for User validation
 export const userValidationSchema = z.object({
   username: z.string().min(1, "Username is required").max(50),
@@ -18,6 +23,9 @@ export const userValidationSchema = z.object({
   name: z.string().min(1, "Name is required").max(100),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"), // Assuming hashed passwords
+  needPasswordReset: z.boolean().default(false),
+  socialLogin: z.boolean().default(false),
+  socialLink: z.array(socialLinkSchema).optional(), // Array of Social login links
   number: z.string().min(10, "Invalid phone number").max(15),
   bloodGroup: z.enum([...Object.values(BloodGroup)] as [string, ...string[]], {
     required_error: "Blood group is required",
