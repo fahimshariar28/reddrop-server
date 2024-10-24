@@ -1,8 +1,9 @@
 import { Router } from "express";
 import { locationRoute } from "../modules/location/location.route";
-import { userRouter } from "../modules/user/user.route";
+import { userRoute } from "../modules/user/user.route";
 import { requestRoute } from "../modules/request/request.route";
 import { donationRoute } from "../modules/donation/donation.router";
+import { feedbackRoute } from "../modules/feedback/feedback.route";
 export const router = Router();
 
 const moduleRoutes = [
@@ -12,7 +13,7 @@ const moduleRoutes = [
   },
   {
     path: "/user",
-    route: userRouter,
+    route: userRoute,
   },
   {
     path: "/request",
@@ -21,6 +22,10 @@ const moduleRoutes = [
   {
     path: "/donation",
     route: donationRoute,
+  },
+  {
+    path: "/feedback",
+    route: feedbackRoute,
   },
 ];
 
