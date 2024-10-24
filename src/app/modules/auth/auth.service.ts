@@ -10,6 +10,7 @@ import {
   IRefreshTokenResponse,
 } from "./auth.interface";
 import { createToken, verifyToken } from "../../helpers/jwtHelper";
+import { hashPasswordHelper } from "../../helpers/hashPasswordHelper";
 
 // Login a user
 const userLogin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
@@ -98,10 +99,7 @@ const setPassword = async (userId: string, password: string) => {
     );
   }
 
-  const hashedPassword = await bcrypt.hash(
-    password,
-    Number(config.password_salt)
-  );
+  const hashedPassword = await hashPasswordHelper(password);
 
   // Update the password and set needPasswordReset to false
   await UserModel.findByIdAndUpdate(userId, {
@@ -144,10 +142,7 @@ const changePassword = async (
     );
   }
 
-  const hashedPassword = await bcrypt.hash(
-    newPassword,
-    Number(config.password_salt)
-  );
+  const hashedPassword = await hashPasswordHelper(newPassword);
 
   // Update the password
   await UserModel.findByIdAndUpdate(userId, {

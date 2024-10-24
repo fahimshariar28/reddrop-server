@@ -1,8 +1,7 @@
 import { Schema, model, Document } from "mongoose";
-import bcrypt from "bcrypt";
 import { IUser } from "./user.interface";
-import config from "../../config";
 import { ROLE, STATUS, BloodGroup } from "../../enums/userEnum";
+import { hashPasswordHelper } from "../../helpers/hashPasswordHelper";
 
 // Mongoose Schema for Address
 const addressSchema = new Schema({
@@ -62,10 +61,7 @@ const userSchema = new Schema<IUser & Document>(
 // Middleware to hash the password before saving
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    this.password = await bcrypt.hash(
-      this.password,
-      Number(config.password_salt)
-    );
+    this.password = await hashPasswordHelper(this.password);
   }
   next();
 });
