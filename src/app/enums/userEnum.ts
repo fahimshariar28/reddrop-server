@@ -5,7 +5,7 @@ export const ROLE = {
 
 export const STATUS = {
   ACTIVE: "active",
-  UNAVAILABLE: "unavailable",
+  Inactive: "inactive",
 } as const;
 
 export const BloodGroup = {
