@@ -12,7 +12,7 @@ const addressSchema = z.object({
 // Zod schema for User validation
 export const userValidationSchema = z.object({
   username: z.string().min(1, "Username is required").max(50),
-  userType: z.enum([ROLE.ADMIN, ROLE.USER], {
+  role: z.enum([ROLE.ADMIN, ROLE.USER], {
     required_error: "User type is required",
   }),
   name: z.string().min(1, "Name is required").max(100),

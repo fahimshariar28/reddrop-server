@@ -16,7 +16,7 @@ const addressSchema = new Schema({
 const userSchema = new Schema<IUser & Document>(
   {
     username: { type: String, required: true, unique: true, maxlength: 50 },
-    userType: {
+    role: {
       type: String,
       enum: [...Object.values(ROLE)],
       required: true,

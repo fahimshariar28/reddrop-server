@@ -13,7 +13,7 @@ type Address = {
 export type IUser = {
   _id?: string; // MongoDB ObjectId as string
   username: string;
-  userType: (typeof ROLE)[keyof typeof ROLE];
+  role: (typeof ROLE)[keyof typeof ROLE];
   name: string;
   email: string;
   password: string; // Should be a hashed password
