@@ -1,6 +1,8 @@
 import LocationModel from "./location.model";
 import { IDistrict, IDivision, IUpazila } from "./location.interface";
 import { Types } from "mongoose";
+import GenericError from "../../errors/genericError";
+import httpStatus from "http-status";
 
 // Division Service
 // Create a new division
@@ -23,7 +25,7 @@ const updateDivision = async (id: string, divisionData: IDivision) => {
   });
 
   if (!division) {
-    throw new Error("Division not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Division not found");
   }
 
   return division;
@@ -33,7 +35,7 @@ const updateDivision = async (id: string, divisionData: IDivision) => {
 const deleteDivision = async (id: string) => {
   const division = await LocationModel.findByIdAndDelete(id);
   if (!division) {
-    throw new Error("Division not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Division not found");
   }
 };
 
@@ -42,7 +44,7 @@ const deleteDivision = async (id: string) => {
 const addDistrict = async (divisionId: string, districtData: IDistrict) => {
   const division = await LocationModel.findById(divisionId);
   if (!division) {
-    throw new Error("Division not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Division not found");
   }
   division.districts.push(districtData);
   await division.save();
@@ -58,7 +60,7 @@ const updateDistrict = async (
   // Find the division by its ID
   const division = await LocationModel.findById(divisionId);
   if (!division) {
-    throw new Error("Division not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Division not found");
   }
 
   // Find the district by its ID within the division's districts
@@ -66,7 +68,7 @@ const updateDistrict = async (
     (d) => d._id && d._id.toString() === districtId
   );
   if (!district) {
-    throw new Error("District not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "District not found");
   }
 
   // Update district properties
@@ -84,7 +86,7 @@ const deleteDistrict = async (divisionId: string, districtId: string) => {
   // Find the division by its ID
   const division = await LocationModel.findById(divisionId);
   if (!division) {
-    throw new Error("Division not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Division not found");
   }
 
   // Find the index of the district to delete
@@ -93,7 +95,7 @@ const deleteDistrict = async (divisionId: string, districtId: string) => {
   );
 
   if (districtIndex === -1) {
-    throw new Error("District not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "District not found");
   }
 
   // Remove the district from the districts array
@@ -107,7 +109,7 @@ const deleteDistrict = async (divisionId: string, districtId: string) => {
 const getDistrictsByDivision = async (divisionId: string) => {
   const division = await LocationModel.findById(divisionId);
   if (!division) {
-    throw new Error("Division not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Division not found");
   }
 
   // Map district names and ids
@@ -130,7 +132,7 @@ const createUpazila = async (districtId: string, upazilaData: IUpazila) => {
   const division = await LocationModel.findOne({ "districts._id": districtId });
 
   if (!division) {
-    throw new Error("District not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "District not found");
   }
 
   // Find the district
@@ -139,7 +141,10 @@ const createUpazila = async (districtId: string, upazilaData: IUpazila) => {
   );
 
   if (districtIndex === -1) {
-    throw new Error("District not found in the found document");
+    throw new GenericError(
+      httpStatus.NOT_FOUND,
+      "District not found in the found document"
+    );
   }
 
   // Create the new upazila and push it into the district's upazilas array
@@ -158,7 +163,7 @@ const getUpazilasByDistrict = async (districtId: string) => {
     { "districts.$": 1 }
   );
   if (!district || district.districts.length === 0) {
-    throw new Error("District not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "District not found");
   }
   return district.districts[0].upazilas;
 };
@@ -173,7 +178,7 @@ const updateUpazila = async (
   const division = await LocationModel.findOne({ "districts._id": districtId });
 
   if (!division) {
-    throw new Error("District not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "District not found");
   }
 
   // Find the index of the district using findIndex
@@ -182,7 +187,10 @@ const updateUpazila = async (
   );
 
   if (districtIndex === -1) {
-    throw new Error("District not found in the found document");
+    throw new GenericError(
+      httpStatus.NOT_FOUND,
+      "District not found in the found document"
+    );
   }
 
   // Find the district using the index
@@ -194,7 +202,7 @@ const updateUpazila = async (
   );
 
   if (upazilaIndex === -1) {
-    throw new Error("Upazila not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Upazila not found");
   }
 
   // Update the upazila's properties
@@ -214,7 +222,7 @@ const deleteUpazila = async (districtId: string, upazilaId: string) => {
   const division = await LocationModel.findOne({ "districts._id": districtId });
 
   if (!division) {
-    throw new Error("District not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "District not found");
   }
 
   // Find the index of the district using findIndex
@@ -223,7 +231,10 @@ const deleteUpazila = async (districtId: string, upazilaId: string) => {
   );
 
   if (districtIndex === -1) {
-    throw new Error("District not found in the found document");
+    throw new GenericError(
+      httpStatus.NOT_FOUND,
+      "District not found in the found document"
+    );
   }
 
   // Find the district using the index
@@ -235,7 +246,7 @@ const deleteUpazila = async (districtId: string, upazilaId: string) => {
   );
 
   if (upazilaIndex === -1) {
-    throw new Error("Upazila not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "Upazila not found");
   }
 
   // Remove the upazila from the array

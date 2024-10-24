@@ -87,12 +87,15 @@ const setPassword = async (userId: string, password: string) => {
   // Check if the user exists
   const user = await UserModel.findById(userId);
   if (!user) {
-    throw new Error("User not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "User not found");
   }
 
   // Check if the needPasswordReset is false
   if (!user.needPasswordReset) {
-    throw new Error("Password has already been set");
+    throw new GenericError(
+      httpStatus.BAD_REQUEST,
+      "Password is already set for the user"
+    );
   }
 
   const hashedPassword = await bcrypt.hash(
@@ -118,12 +121,15 @@ const changePassword = async (
     .lean();
 
   if (!user) {
-    throw new Error("User not found");
+    throw new GenericError(httpStatus.NOT_FOUND, "User not found");
   }
 
   const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
   if (!isPasswordMatch) {
-    throw new Error("Old password is incorrect");
+    throw new GenericError(
+      httpStatus.UNAUTHORIZED,
+      "Old password is incorrect"
+    );
   }
 
   // Check if the new password is the same as the old password
@@ -132,7 +138,10 @@ const changePassword = async (
     bcrypt.compareSync(newPassword, password)
   );
   if (isSamePassword) {
-    throw new Error("New password cannot be the same as the old password");
+    throw new GenericError(
+      httpStatus.BAD_REQUEST,
+      "New password cannot be the same as the old password"
+    );
   }
 
   const hashedPassword = await bcrypt.hash(
