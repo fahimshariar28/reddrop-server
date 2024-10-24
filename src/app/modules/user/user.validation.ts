@@ -17,9 +17,7 @@ const socialLinkSchema = z.object({
 // Zod schema for User validation
 export const userValidationSchema = z.object({
   username: z.string().min(1, "Username is required").max(50),
-  role: z.enum([ROLE.ADMIN, ROLE.USER], {
-    required_error: "User type is required",
-  }),
+  role: z.enum([ROLE.ADMIN, ROLE.USER]).default(ROLE.USER),
   name: z.string().min(1, "Name is required").max(100),
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"), // Assuming hashed passwords
