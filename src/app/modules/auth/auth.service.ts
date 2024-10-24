@@ -9,7 +9,7 @@ import {
   ILoginUserResponse,
   IRefreshTokenResponse,
 } from "./auth.interface";
-import { createToken, verifyToken } from "./auth.utils";
+import { createToken, verifyToken } from "../../helpers/jwtHelper";
 
 // Login a user
 const userLogin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
