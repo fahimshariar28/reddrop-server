@@ -3,11 +3,6 @@ export const ROLE = {
   USER: "user",
 } as const;
 
-export const STATUS = {
-  ACTIVE: "active",
-  Inactive: "inactive",
-} as const;
-
 export const BloodGroup = {
   A_POSITIVE: "A+",
   A_NEGATIVE: "A-",
