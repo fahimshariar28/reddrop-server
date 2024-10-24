@@ -32,9 +32,11 @@ export const userValidationSchema = z.object({
   plasma: z.boolean({ required_error: "Plasma eligibility is required" }),
   permanentAddress: addressSchema,
   presentAddress: addressSchema,
-  availability: z.enum([STATUS.ACTIVE, STATUS.UNAVAILABLE], {
-    required_error: "Availability status is required",
-  }),
+  availability: z
+    .enum([STATUS.ACTIVE, STATUS.UNAVAILABLE], {
+      required_error: "Availability status is required",
+    })
+    .optional(),
   userBadges: z.array(z.string()).optional(), // Array of Badge ObjectIds (as strings), can be optional during creation
   donationHistory: z.array(z.string()).optional(), // Array of Donation History ObjectIds (as strings), can be optional during creation
   referrer: z.string().optional(), // Optional referrer (username)
