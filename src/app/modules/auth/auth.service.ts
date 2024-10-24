@@ -84,6 +84,17 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
 // Set the password of a user
 const setPassword = async (userId: string, password: string) => {
+  // Check if the user exists
+  const user = await UserModel.findById(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  // Check if the needPasswordReset is false
+  if (!user.needPasswordReset) {
+    throw new Error("Password has already been set");
+  }
+
   const hashedPassword = await bcrypt.hash(
     password,
     Number(config.password_salt)
@@ -102,7 +113,9 @@ const changePassword = async (
   oldPassword: string,
   newPassword: string
 ): Promise<boolean> => {
-  const user = await UserModel.findById(userId).select("password").lean();
+  const user = await UserModel.findById(userId)
+    .select("password oldPasswords")
+    .lean();
 
   if (!user) {
     throw new Error("User not found");
@@ -114,7 +127,10 @@ const changePassword = async (
   }
 
   // Check if the new password is the same as the old password
-  const isSamePassword = await bcrypt.compare(newPassword, user.password);
+  const oldPasswords = user.oldPasswords || [];
+  const isSamePassword = oldPasswords.some((password: string) =>
+    bcrypt.compareSync(newPassword, password)
+  );
   if (isSamePassword) {
     throw new Error("New password cannot be the same as the old password");
   }
