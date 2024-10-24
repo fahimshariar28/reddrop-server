@@ -22,6 +22,7 @@ export type IUser = {
   email: string;
   password: string; // Should be a hashed password
   needPasswordReset: boolean;
+  oldPasswords?: string[]; // Array of hashed passwords
   socialLogin: boolean;
   socialLink?: ISocialLink[]; // Array of objects of Social login link
   number: string;

@@ -31,6 +31,7 @@ const userSchema = new Schema<IUser & Document>(
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true }, // Assuming hashed password
     needPasswordReset: { type: Boolean, default: false },
+    oldPasswords: { type: [String], required: false }, // Array of hashed passwords
     socialLogin: { type: Boolean, default: false },
     socialLink: { type: [socialLinkSchema], required: false }, // Array of Social login links
     number: { type: String, required: true, minlength: 10, maxlength: 15 },

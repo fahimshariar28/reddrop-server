@@ -22,6 +22,7 @@ export const userValidationSchema = z.object({
   email: z.string().email("Invalid email address"),
   password: z.string().min(8, "Password must be at least 8 characters"), // Assuming hashed passwords
   needPasswordReset: z.boolean().default(false),
+  oldPasswords: z.array(z.string()).optional(), // Array of hashed passwords
   socialLogin: z.boolean().default(false),
   socialLink: z.array(socialLinkSchema).optional(), // Array of Social login links
   number: z.string().min(10, "Invalid phone number").max(15),

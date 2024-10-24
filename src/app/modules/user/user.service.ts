@@ -1,5 +1,7 @@
 import UserModel from "./user.model";
 import { IUser } from "./user.interface";
+import bcrypt from "bcrypt";
+import config from "../../config";
 
 // Create a new user
 const createUser = async (userData: IUser): Promise<IUser> => {
@@ -36,6 +38,61 @@ const updateUser = async (
   return updatedUser as IUser | null;
 };
 
+// Set the password of a user
+const setPassword = async (userId: string, password: string) => {
+  const hashedPassword = await bcrypt.hash(
+    password,
+    Number(config.password_salt)
+  );
+
+  // Update the password and set needPasswordReset to false
+  await UserModel.findByIdAndUpdate(userId, {
+    password: hashedPassword,
+    needPasswordReset: false,
+  }).select("-password -__v");
+};
+
+// Change password
+const changePassword = async (
+  userId: string,
+  oldPassword: string,
+  newPassword: string
+): Promise<boolean> => {
+  const user = await UserModel.findById(userId).select("password").lean();
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  const isPasswordMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isPasswordMatch) {
+    throw new Error("Old password is incorrect");
+  }
+
+  // Check if the new password is the same as the old password
+  const isSamePassword = await bcrypt.compare(newPassword, user.password);
+  if (isSamePassword) {
+    throw new Error("New password cannot be the same as the old password");
+  }
+
+  const hashedPassword = await bcrypt.hash(
+    newPassword,
+    Number(config.password_salt)
+  );
+
+  // Update the password
+  await UserModel.findByIdAndUpdate(userId, {
+    password: hashedPassword,
+  }).select("-password -__v");
+
+  // Add the old password to the oldPasswords array
+  await UserModel.findByIdAndUpdate(userId, {
+    $push: { oldPasswords: user.password },
+  }).select("-password -__v");
+
+  return true;
+};
+
 // Delete a user by ID
 const deleteUser = async (userId: string) => {
   const user = await UserModel.findById(userId).select("-password -__v");
@@ -69,6 +126,8 @@ export const UserService = {
   getUserById,
   getUserByUsername,
   updateUser,
+  setPassword,
+  changePassword,
   deleteUser,
   checkEmailExists,
   checkUsernameExists,
