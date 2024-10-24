@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { RequestStatus } from "../../enums/requestEnum";
+import { BloodGroup } from "../../enums/userEnum";
 
 export const RequestLocationSchema = z.object({
   division: z.string(),
@@ -23,7 +24,9 @@ export const RequestStatusSchema = z.object({
 export const RequestValidationSchema = z.object({
   receiverId: z.string(),
   donorId: z.string(),
-  bloodGroup: z.string(),
+  bloodGroup: z.enum([...Object.values(BloodGroup)] as [string, ...string[]], {
+    required_error: "Blood group is required",
+  }),
   plasma: z.boolean(),
   isEmergency: z.boolean(),
   location: RequestLocationSchema,
