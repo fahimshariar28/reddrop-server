@@ -18,12 +18,6 @@ router.get("/username/:username", UserController.getUserByUsername);
 // Route to update a user by ID
 router.put("/:id", UserController.updateUser);
 
-// Route to set password
-router.put("/set-password/:id", UserController.setPassword);
-
-// Route to change password
-router.put("/change-password/:id", UserController.changePassword);
-
 // Route to delete a user by ID
 router.put("/delete/:id", UserController.deleteUser);
 

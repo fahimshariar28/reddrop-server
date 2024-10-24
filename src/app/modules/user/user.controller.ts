@@ -104,34 +104,6 @@ const updateUser = catchAsyncFunc(async (req, res) => {
   });
 });
 
-// Set the password of a user
-const setPassword = catchAsyncFunc(async (req, res) => {
-  const { id } = req.params;
-  const { password } = req.body;
-
-  await UserService.setPassword(id, password);
-
-  sendResponseMessage(res, {
-    success: true,
-    statusCode: 200,
-    message: "Password set successfully",
-  });
-});
-
-// Change password
-const changePassword = catchAsyncFunc(async (req, res) => {
-  const { id } = req.params;
-  const { oldPassword, newPassword } = req.body;
-
-  await UserService.changePassword(id, oldPassword, newPassword);
-
-  sendResponseMessage(res, {
-    success: true,
-    statusCode: 200,
-    message: "Password changed successfully",
-  });
-});
-
 // Delete a user by ID
 const deleteUser = catchAsyncFunc(async (req, res) => {
   const { id } = req.params;
@@ -187,8 +159,6 @@ export const UserController = {
   getUserById,
   getUserByUsername,
   updateUser,
-  setPassword,
-  changePassword,
   deleteUser,
   checkDuplicateEmail,
   checkDuplicateUsername,
