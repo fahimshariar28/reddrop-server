@@ -45,7 +45,7 @@ const refreshToken = catchAsyncFunc(async (req, res) => {
 
 // Set the password of a user
 const setPassword = catchAsyncFunc(async (req, res) => {
-  const { id } = req.params;
+  const id = req.user.id;
   const { password } = req.body;
 
   await AuthService.setPassword(id, password);
@@ -59,7 +59,7 @@ const setPassword = catchAsyncFunc(async (req, res) => {
 
 // Change password
 const changePassword = catchAsyncFunc(async (req, res) => {
-  const { id } = req.params;
+  const id = req.user.id;
   const { oldPassword, newPassword } = req.body;
 
   await AuthService.changePassword(id, oldPassword, newPassword);

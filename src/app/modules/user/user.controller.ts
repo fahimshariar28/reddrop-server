@@ -79,7 +79,7 @@ const getUserByUsername = catchAsyncFunc(async (req, res) => {
 
 // Update a user by ID
 const updateUser = catchAsyncFunc(async (req, res) => {
-  const { id } = req.params;
+  const id = req.user.id;
 
   // Validate the incoming user data
   const validatedData = userValidationSchema
@@ -106,7 +106,7 @@ const updateUser = catchAsyncFunc(async (req, res) => {
 
 // Delete a user by ID
 const deleteUser = catchAsyncFunc(async (req, res) => {
-  const { id } = req.params;
+  const id = req.params.id;
 
   const deletedUser = await UserService.deleteUser(id);
 
