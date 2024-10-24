@@ -3,7 +3,7 @@ import catchAsyncFunc from "../../utils/catchAsyncFunc";
 import sendResponseMessage from "../../utils/sendResponse";
 import { UserService } from "./user.service";
 import { IUser } from "./user.interface";
-import { BloodGroup } from "./user.constant";
+import { BloodGroup } from "../../enums/userEnum";
 
 // Create a new user
 const createUser = catchAsyncFunc(async (req, res) => {

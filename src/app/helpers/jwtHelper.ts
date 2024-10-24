@@ -1,5 +1,5 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
-import { ROLE } from "../modules/user/user.constant";
+import { ROLE } from "../enums/userEnum";
 
 export const createToken = (
   jwtPayload: {

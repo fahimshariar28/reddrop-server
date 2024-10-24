@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ROLE, STATUS, BloodGroup } from "./user.constant";
+import { ROLE, STATUS, BloodGroup } from "../../enums/userEnum";
 
 // Zod schema for the Address object
 const addressSchema = z.object({
@@ -33,7 +33,7 @@ export const userValidationSchema = z.object({
   permanentAddress: addressSchema,
   presentAddress: addressSchema,
   availability: z
-    .enum([STATUS.ACTIVE, STATUS.UNAVAILABLE], {
+    .enum([STATUS.ACTIVE, STATUS.Inactive], {
       required_error: "Availability status is required",
     })
     .optional(),

@@ -2,7 +2,7 @@ import { Schema, model, Document } from "mongoose";
 import bcrypt from "bcrypt";
 import { IUser } from "./user.interface";
 import config from "../../config";
-import { ROLE, STATUS, BloodGroup } from "./user.constant";
+import { ROLE, STATUS, BloodGroup } from "../../enums/userEnum";
 
 // Mongoose Schema for Address
 const addressSchema = new Schema({

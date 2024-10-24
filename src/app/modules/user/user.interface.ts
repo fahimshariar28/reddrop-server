@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ROLE, STATUS, BloodGroup } from "./user.constant";
+import { ROLE, STATUS, BloodGroup } from "../../enums/userEnum";
 
 // Interface for Address object
 type Address = {
