@@ -26,8 +26,8 @@ const requestSchema = new Schema({
   isEmergency: { type: Boolean, required: true },
   location: { type: addressSchema, required: true },
   patientProblem: { type: String, required: true },
-  status: { type: [statusSchema], required: true },
-  requestExpiresAt: { type: Date, required: true },
+  requestStatus: { type: [statusSchema], required: true },
+  // requestExpiresAt: { type: Date, required: false },
 });
 
 const RequestModel = model<IRequest & Document>("Request", requestSchema);

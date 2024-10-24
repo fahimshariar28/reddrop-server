@@ -22,6 +22,6 @@ export type IRequest = {
   isEmergency: boolean;
   location: ILocation;
   patientProblem: string;
-  status: IStatus[];
-  requestExpiresAt: Date;
+  requestStatus: IStatus[];
+  // requestExpiresAt?: Date;
 };

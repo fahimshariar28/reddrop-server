@@ -28,6 +28,5 @@ export const RequestValidationSchema = z.object({
   isEmergency: z.boolean(),
   location: RequestLocationSchema,
   patientProblem: z.string(),
-  status: z.array(RequestStatusSchema),
-  requestExpiresAt: z.date(),
+  requestStatus: z.array(RequestStatusSchema),
 });
