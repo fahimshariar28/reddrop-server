@@ -64,6 +64,26 @@ const getUserById = catchAsyncFunc(async (req, res) => {
   });
 });
 
+// Get my profile
+const getMyProfile = catchAsyncFunc(async (req, res) => {
+  const user = await UserService.getMyProfile(req.user.id);
+
+  if (!user) {
+    sendResponseMessage(res, {
+      success: false,
+      statusCode: httpStatus.NOT_FOUND,
+      message: "User not found",
+    });
+  }
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "User fetched successfully",
+    data: user,
+  });
+});
+
 // Get a user by username
 const getUserByUsername = catchAsyncFunc(async (req, res) => {
   const { username } = req.params;
@@ -162,6 +182,7 @@ export const UserController = {
   getAllUsers,
   getUsersByFilter,
   getUserById,
+  getMyProfile,
   getUserByUsername,
   updateUser,
   pushOutsideDonation,

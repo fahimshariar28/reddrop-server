@@ -18,6 +18,13 @@ router.get(
   UserController.getUsersByFilter
 );
 
+// Route to get my profile
+router.get(
+  "/my-profile",
+  authVerification(ROLE.ADMIN, ROLE.USER),
+  UserController.getMyProfile
+);
+
 // Route to get a user by ID
 router.get(
   "/:id",
@@ -26,10 +33,13 @@ router.get(
 );
 
 // Route to get a user by username
-router.get(
-  "/username/:username",
+router.get("/username/:username", UserController.getUserByUsername);
+
+// Route to push a new outside donation
+router.put(
+  "/outside-donation",
   authVerification(ROLE.ADMIN, ROLE.USER),
-  UserController.getUserByUsername
+  UserController.pushOutsideDonation
 );
 
 // Route to update a user by ID
@@ -37,13 +47,6 @@ router.put(
   "/:id",
   authVerification(ROLE.ADMIN, ROLE.USER),
   UserController.updateUser
-);
-
-// Route to push a new outside donation
-router.put(
-  "/outside-donation/:id",
-  authVerification(ROLE.ADMIN, ROLE.USER),
-  UserController.pushOutsideDonation
 );
 
 // Route to delete a user by ID

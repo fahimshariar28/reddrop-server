@@ -1,5 +1,6 @@
 import UserModel from "./user.model";
 import { IUser } from "./user.interface";
+import { ObjectId } from "mongoose";
 
 // Create a new user
 const createUser = async (userData: IUser): Promise<IUser> => {
@@ -46,7 +47,19 @@ const getUserById = async (userId: string): Promise<IUser | null> => {
   const user = await UserModel.findById(userId)
     .select("-password -__v")
     .populate({
-      path: "userBadges socialLink requestRequested requestReceived donated donationReceived notifications refereed outsideDonation ",
+      // TODO: Populate userBadges, notifications field
+      path: "socialLink requestRequested requestReceived donated donationReceived refereed outsideDonation",
+    });
+  return user ? (user.toObject() as IUser) : null;
+};
+
+// Get my profile
+const getMyProfile = async (userId: ObjectId): Promise<IUser | null> => {
+  const user = await UserModel.findById(userId)
+    .select("-password -__v")
+    .populate({
+      // TODO: Populate userBadges, notifications field
+      path: "socialLink requestRequested requestReceived donated donationReceived refereed outsideDonation",
     });
   return user ? (user.toObject() as IUser) : null;
 };
@@ -113,6 +126,7 @@ export const UserService = {
   getAllUsers,
   getUsersByFilter,
   getUserById,
+  getMyProfile,
   getUserByUsername,
   updateUser,
   pushOutsideDonation,
