@@ -16,7 +16,7 @@ const notificationSchema = new Schema(
   }
 );
 
-const NotificationModel = model<INotification>(
+const NotificationModel = model<INotification & Document>(
   "Notification",
   notificationSchema
 );
