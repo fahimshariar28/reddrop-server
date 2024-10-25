@@ -64,9 +64,24 @@ const getDonationById = catchAsyncFunc(async (req, res) => {
   });
 });
 
+// Update donation status
+const updateDonationStatus = catchAsyncFunc(async (req, res) => {
+  const { id } = req.params;
+
+  const donation = await DonationService.updateDonationStatus(id, req.body);
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: 200,
+    message: "Request updated successfully",
+    data: donation,
+  });
+});
+
 export const DonationController = {
   createDonation,
   getAllDonations,
   getDonationsByUserId,
   getDonationById,
+  updateDonationStatus,
 };

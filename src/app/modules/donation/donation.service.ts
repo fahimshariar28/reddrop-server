@@ -1,5 +1,5 @@
 import UserModel from "../user/user.model";
-import { IDonation } from "./donation.interface";
+import { IDonation, IDonationStatus } from "./donation.interface";
 import DonationModel from "./donation.model";
 
 // Create Donation
@@ -43,9 +43,25 @@ const getDonationsByUserId = async (id: string) => {
   return data;
 };
 
+// Update Donation status
+const updateDonationStatus = async (id: string, data: IDonationStatus) => {
+  return await DonationModel.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        "donationStatus.0.status": data.status,
+        "donationStatus.0.time": new Date(),
+        ...(data.reason && { "donationStatus.0.reason": data.reason }),
+      },
+    },
+    { new: true }
+  ).exec();
+};
+
 export const DonationService = {
   createDonation,
   getAllDonations,
   getDonationById,
   getDonationsByUserId,
+  updateDonationStatus,
 };

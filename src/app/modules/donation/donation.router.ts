@@ -33,4 +33,11 @@ router.get(
   DonationController.getDonationById
 );
 
+// Update donation status
+router.put(
+  "/:id",
+  authVerification(ROLE.ADMIN, ROLE.USER),
+  DonationController.updateDonationStatus
+);
+
 export const donationRoute = router;
