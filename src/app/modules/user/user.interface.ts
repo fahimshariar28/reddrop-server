@@ -52,6 +52,7 @@ export type IUser = {
   outsideDonation?: IOutsideDonation[]; // Date of last donation only for new users to track the last donation date
   reference?: string; // Username of the referrer
   refereed?: Types.ObjectId[]; // Referrer User ObjectId
+  notifications?: Types.ObjectId[]; // Array of Notification ObjectIds
   createdAt?: Date;
   updatedAt?: Date;
   isDeleted: boolean;

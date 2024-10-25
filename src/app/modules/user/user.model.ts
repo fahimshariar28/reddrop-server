@@ -56,6 +56,7 @@ const userSchema = new Schema<IUser & Document>(
     outsideDonation: [{ type: outsideDonationSchema, required: true }], // Date of last donation only for new users to track the last donation date
     reference: { type: String, required: false }, // Optional referrer (username)
     refereed: [{ type: Schema.Types.ObjectId, ref: "User" }], // Referrer User
+    notifications: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     isDeleted: { type: Boolean, default: false },

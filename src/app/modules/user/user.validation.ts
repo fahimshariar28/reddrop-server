@@ -45,6 +45,7 @@ export const userValidationSchema = z.object({
   donationReceived: z.array(z.string()).optional(), // Array of Donation History ObjectIds
   outsideDonation: z.array(outsideDonationSchema).optional(), // Date of last donation only for new users to track the last donation date
   referrer: z.string().optional(), // Optional referrer (username)
+  refereed: z.array(z.string()).optional(), // Referrer User
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),
   isDeleted: z.boolean().default(false), // Default value for deletion status
