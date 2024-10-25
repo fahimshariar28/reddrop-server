@@ -12,14 +12,14 @@ router.post("/refresh", AuthController.refreshToken);
 
 // Route to set password
 router.put(
-  "/set-password/:id",
+  "/set-password",
   authVerification(ROLE.ADMIN, ROLE.USER),
   AuthController.setPassword
 );
 
 // Route to change password
 router.put(
-  "/change-password/:id",
+  "/change-password",
   authVerification(ROLE.ADMIN, ROLE.USER),
   AuthController.changePassword
 );
