@@ -1,14 +1,14 @@
 import { BloodGroup } from "../../enums/userEnum";
 import { RequestStatus } from "../../enums/requestEnum";
 
-type ILocation = {
+type IRequestLocation = {
   division: string;
   district: string;
   upazila: string;
   hospital: string;
 };
 
-type IStatus = {
+export type IRequestStatus = {
   status: (typeof RequestStatus)[keyof typeof RequestStatus];
   time: Date;
   reason?: string;
@@ -20,8 +20,8 @@ export type IRequest = {
   bloodGroup: (typeof BloodGroup)[keyof typeof BloodGroup];
   plasma: boolean;
   isEmergency: boolean;
-  location: ILocation;
+  location: IRequestLocation;
   patientProblem: string;
-  requestStatus: IStatus[];
+  requestStatus: IRequestStatus[];
   // requestExpiresAt?: Date;
 };

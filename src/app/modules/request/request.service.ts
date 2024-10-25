@@ -1,5 +1,5 @@
 import UserModel from "../user/user.model";
-import { IRequest } from "./request.interface";
+import { IRequest, IRequestStatus } from "./request.interface";
 import RequestModel from "./request.model";
 
 // Create a new donation request
@@ -45,12 +45,19 @@ const getRequestById = async (id: string) => {
   return request;
 };
 
-// Update a donation request by id
-const updateRequest = async (requestId: string, data: Partial<IRequest>) => {
-  const updatedRequest = await RequestModel.findByIdAndUpdate(requestId, data, {
-    new: true,
-  });
-  return updatedRequest;
+// Update a request status by id
+const updateRequest = async (id: string, data: IRequestStatus) => {
+  return await RequestModel.findByIdAndUpdate(
+    id,
+    {
+      $set: {
+        "requestStatus.0.status": data.status,
+        "requestStatus.0.time": new Date(),
+        ...(data.reason && { "requestStatus.0.reason": data.reason }),
+      },
+    },
+    { new: true }
+  ).exec();
 };
 
 export const RequestService = {
