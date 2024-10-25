@@ -1,5 +1,7 @@
 import { Schema, model, Document } from "mongoose";
 import { IRequest } from "./request.interface";
+import { RequestStatus } from "../../enums/requestEnum";
+import { BloodGroup } from "../../enums/userEnum";
 
 // Mongoose Schema for Address
 const addressSchema = new Schema({
@@ -12,7 +14,12 @@ const addressSchema = new Schema({
 // Mongoose Schema for Status
 
 const statusSchema = new Schema({
-  status: { type: String, required: true },
+  // enum of RequestStatus
+  status: {
+    type: String,
+    enum: [...Object.values(RequestStatus)],
+    required: true,
+  },
   time: { type: Date, required: true },
   reason: { type: String, required: false },
 });
@@ -21,7 +28,11 @@ const statusSchema = new Schema({
 const requestSchema = new Schema({
   receiverId: { type: Schema.Types.ObjectId, ref: "User", required: true },
   donorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  bloodGroup: { type: String, required: true },
+  bloodGroup: {
+    type: String,
+    enum: [...Object.values(BloodGroup)],
+    required: true,
+  },
   plasma: { type: Boolean, required: true },
   isEmergency: { type: Boolean, required: true },
   location: { type: addressSchema, required: true },
