@@ -16,7 +16,10 @@ import { hashPasswordHelper } from "../../helpers/hashPasswordHelper";
 const userLogin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   // console.log(payload);
   const isUserExists = await UserModel.findOne({
-    email: payload?.email,
+    $or: [
+      { email: payload?.emailOrUsername },
+      { username: payload?.emailOrUsername },
+    ],
   }).select("+password ");
   //   console.log(isUserExists);
   if (!isUserExists) {

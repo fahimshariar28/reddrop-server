@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import DonationModel from "../donation/donation.model";
 import { IFeedback } from "./feedback.interface";
 import FeedbackModel from "./feedback.model";
@@ -26,7 +27,7 @@ const getFeedbackById = async (id: string) => {
 };
 
 // Get Feedbacks by user id
-const getFeedbacksByUserId = async (id: string) => {
+const getFeedbacksByUserId = async (id: ObjectId) => {
   const feedback = await FeedbackModel.find({
     $or: [{ receiverId: id }, { donorId: id }],
   }).exec();

@@ -1,10 +1,11 @@
 import catchAsyncFunc from "../../utils/catchAsyncFunc";
 import sendResponseMessage from "../../utils/sendResponse";
+import { ILoginUser } from "./auth.interface";
 import { AuthService } from "./auth.service";
 
 // Login a user
 const loginUser = catchAsyncFunc(async (req, res) => {
-  const user = await AuthService.userLogin(req.body);
+  const user = await AuthService.userLogin(req.body as ILoginUser);
 
   const { accessToken, refreshToken, needPasswordChange } = user;
 

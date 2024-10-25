@@ -1,13 +1,23 @@
+import { Types } from "mongoose";
 import catchAsyncFunc from "../../utils/catchAsyncFunc";
 import sendResponseMessage from "../../utils/sendResponse";
+import { IFeedback } from "./feedback.interface";
 import { FeedbackService } from "./feedback.service";
-import { feedbackValidationSchema } from "./feedback.validation";
 
 // Create Feedback
 const createFeedback = catchAsyncFunc(async (req, res) => {
-  const feedbackValidation = feedbackValidationSchema.parse(req.body);
+  const donationId = new Types.ObjectId(req.body.donationId);
+  const donorId = new Types.ObjectId(req.body.donorId);
+  const receiverId = new Types.ObjectId(req.body.receiverId);
 
-  const feedback = await FeedbackService.createFeedback(feedbackValidation);
+  const feedbackData = {
+    ...req.body,
+    donationId,
+    donorId,
+    receiverId,
+  } as IFeedback;
+
+  const feedback = await FeedbackService.createFeedback(feedbackData);
 
   sendResponseMessage(res, {
     success: true,

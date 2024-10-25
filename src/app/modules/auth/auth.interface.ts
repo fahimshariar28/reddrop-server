@@ -1,5 +1,5 @@
 export type ILoginUser = {
-  email: string;
+  emailOrUsername: string;
   password: string;
 };
 

@@ -1,19 +1,15 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import mongoose from 'mongoose';
-import { ZodError } from 'zod';
-import GenericError from './genericError';
-import handlerCastError from './handleCastError';
-import handlerDuplicateError from './handleDuplicateError';
-import handlerGenericError from './handleGenericError';
-import handleJWTError from './handleJWTError';
-import handleValidationError from './handleValidationError';
-import handlerZodError from './handleZodError';
-import JWTError from './jwtError';
+import mongoose from "mongoose";
+import GenericError from "./genericError";
+import handlerCastError from "./handleCastError";
+import handlerDuplicateError from "./handleDuplicateError";
+import handlerGenericError from "./handleGenericError";
+import handleJWTError from "./handleJWTError";
+import handleValidationError from "./handleValidationError";
+import JWTError from "./jwtError";
 
 const errorPreprocessor = (error: any) => {
-  if (error instanceof ZodError) {
-    return handlerZodError(error);
-  } else if (error instanceof mongoose.Error.ValidationError) {
+  if (error instanceof mongoose.Error.ValidationError) {
     return handleValidationError(error);
   } else if (error.code && error.code === 11000) {
     return handlerDuplicateError(error);
@@ -28,10 +24,10 @@ const errorPreprocessor = (error: any) => {
       success: false,
       statusCode: 500,
 
-      message: 'Unknown Error',
+      message: "Unknown Error",
       issues: [
         {
-          path: '',
+          path: "",
           message: error.message,
         },
       ],

@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import UserModel from "../user/user.model";
 import { IDonation, IDonationStatus } from "./donation.interface";
 import DonationModel from "./donation.model";
@@ -31,7 +32,7 @@ const getDonationById = async (id: string) => {
 };
 
 // Get Donations by user id
-const getDonationsByUserId = async (id: string) => {
+const getDonationsByUserId = async (id: ObjectId) => {
   const donation = await DonationModel.find({
     $or: [{ receiverId: id }, { donorId: id }],
   }).exec();

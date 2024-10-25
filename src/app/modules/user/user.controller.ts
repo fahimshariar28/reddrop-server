@@ -1,24 +1,17 @@
-import userValidationSchema from "./user.validation";
 import catchAsyncFunc from "../../utils/catchAsyncFunc";
 import sendResponseMessage from "../../utils/sendResponse";
 import { UserService } from "./user.service";
 import { IUser } from "./user.interface";
-import { BloodGroup } from "../../enums/userEnum";
 import { userFilter } from "./user.filter";
+import httpStatus from "http-status";
 
 // Create a new user
 const createUser = catchAsyncFunc(async (req, res) => {
-  // Validate the incoming user data
-  const validatedData = userValidationSchema.parse({
-    ...req.body,
-    bloodGroup: req.body.bloodGroup as keyof typeof BloodGroup,
-  });
-
-  const user = await UserService.createUser(validatedData as unknown as IUser);
+  const user = await UserService.createUser(req.body as IUser);
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 201,
+    statusCode: httpStatus.CREATED,
     message: "User registered successfully",
     data: user,
   });
@@ -30,7 +23,7 @@ const getAllUsers = catchAsyncFunc(async (req, res) => {
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "Users fetched successfully",
     data: users,
   });
@@ -44,7 +37,7 @@ const getUsersByFilter = catchAsyncFunc(async (req, res) => {
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "Users fetched successfully",
     data: users,
   });
@@ -58,14 +51,14 @@ const getUserById = catchAsyncFunc(async (req, res) => {
   if (!user) {
     sendResponseMessage(res, {
       success: false,
-      statusCode: 404,
+      statusCode: httpStatus.NOT_FOUND,
       message: "User not found",
     });
   }
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "User fetched successfully",
     data: user,
   });
@@ -79,14 +72,14 @@ const getUserByUsername = catchAsyncFunc(async (req, res) => {
   if (!user) {
     sendResponseMessage(res, {
       success: false,
-      statusCode: 404,
+      statusCode: httpStatus.NOT_FOUND,
       message: "User not found",
     });
   }
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "User fetched successfully",
     data: user,
   });
@@ -96,24 +89,14 @@ const getUserByUsername = catchAsyncFunc(async (req, res) => {
 const updateUser = catchAsyncFunc(async (req, res) => {
   const id = req.user.id;
 
-  // Validate the incoming user data
-  const validatedData = userValidationSchema
-    .partial()
-    .parse(req.body) as Partial<IUser>; // Allow partial updates
-
-  const updatedUser = await UserService.updateUser(id, validatedData);
-
-  if (!updatedUser) {
-    sendResponseMessage(res, {
-      success: false,
-      statusCode: 404,
-      message: "User not found",
-    });
-  }
+  const updatedUser = await UserService.updateUser(
+    id,
+    req.body as Partial<IUser>
+  );
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "User updated successfully",
     data: updatedUser,
   });
@@ -128,7 +111,7 @@ const pushOutsideDonation = catchAsyncFunc(async (req, res) => {
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "Outside donation pushed successfully",
   });
 });
@@ -137,19 +120,11 @@ const pushOutsideDonation = catchAsyncFunc(async (req, res) => {
 const deleteUser = catchAsyncFunc(async (req, res) => {
   const id = req.params.id;
 
-  const deletedUser = await UserService.deleteUser(id);
-
-  if (!deletedUser) {
-    sendResponseMessage(res, {
-      success: false,
-      statusCode: 404,
-      message: "User not found",
-    });
-  }
+  await UserService.deleteUser(id);
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 204,
+    statusCode: httpStatus.OK,
     message: "User deleted successfully",
   });
 });
@@ -162,7 +137,7 @@ const checkDuplicateEmail = catchAsyncFunc(async (req, res) => {
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "Email checked successfully",
     data: { exists },
   });
@@ -176,7 +151,7 @@ const checkDuplicateUsername = catchAsyncFunc(async (req, res) => {
 
   sendResponseMessage(res, {
     success: true,
-    statusCode: 200,
+    statusCode: httpStatus.OK,
     message: "Username checked successfully",
     data: { exists },
   });

@@ -1,5 +1,6 @@
 import { BloodGroup } from "../../enums/userEnum";
 import { donationStatus } from "../../enums/donationEnum";
+import { ObjectId } from "mongoose";
 
 type ILocation = {
   division: string;
@@ -15,8 +16,8 @@ export type IDonationStatus = {
 };
 
 export type IDonation = {
-  donorId: string;
-  receiverId: string;
+  donorId: ObjectId;
+  receiverId: ObjectId;
   donatedAt: Date;
   patientProblem: string;
   location: ILocation;
@@ -25,5 +26,5 @@ export type IDonation = {
   plasma: boolean;
   donationTime: Date;
   donationStatus: IDonationStatus[];
-  feedback: string; // Feedback id
+  feedback: ObjectId;
 };

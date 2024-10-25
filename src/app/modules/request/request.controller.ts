@@ -1,20 +1,11 @@
-import { BloodGroup } from "../../enums/userEnum";
 import catchAsyncFunc from "../../utils/catchAsyncFunc";
 import sendResponseMessage from "../../utils/sendResponse";
 import { IRequest } from "./request.interface";
 import { RequestService } from "./request.service";
-import { RequestValidationSchema } from "./request.validation";
 
 // Create a new request
 const createRequest = catchAsyncFunc(async (req, res) => {
-  const requestValidation = RequestValidationSchema.parse({
-    ...req.body,
-    bloodGroup: req.body.bloodGroup as keyof typeof BloodGroup,
-  });
-
-  const request = await RequestService.donationRequest(
-    requestValidation as unknown as IRequest
-  );
+  const request = await RequestService.donationRequest(req.body as IRequest);
 
   sendResponseMessage(res, {
     success: true,

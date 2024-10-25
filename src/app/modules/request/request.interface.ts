@@ -1,5 +1,6 @@
 import { BloodGroup } from "../../enums/userEnum";
 import { RequestStatus } from "../../enums/requestEnum";
+import { ObjectId } from "mongoose";
 
 type IRequestLocation = {
   division: string;
@@ -15,8 +16,8 @@ export type IRequestStatus = {
 };
 
 export type IRequest = {
-  receiverId: string;
-  donorId: string;
+  receiverId: ObjectId;
+  donorId: ObjectId;
   bloodGroup: (typeof BloodGroup)[keyof typeof BloodGroup];
   plasma: boolean;
   isEmergency: boolean;

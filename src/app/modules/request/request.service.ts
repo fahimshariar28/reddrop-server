@@ -1,3 +1,4 @@
+import { ObjectId } from "mongoose";
 import UserModel from "../user/user.model";
 import { IRequest, IRequestStatus } from "./request.interface";
 import RequestModel from "./request.model";
@@ -27,7 +28,7 @@ const getAllRequests = async () => {
 };
 
 // Get requests by user id
-const getRequestsByUserId = async (id: string) => {
+const getRequestsByUserId = async (id: ObjectId) => {
   // find from both receiverId and donorId
   const request = await RequestModel.find({
     $or: [{ receiverId: id }, { donorId: id }],

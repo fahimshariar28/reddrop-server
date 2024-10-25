@@ -1,20 +1,17 @@
-import { BloodGroup } from "../../enums/userEnum";
 import catchAsyncFunc from "../../utils/catchAsyncFunc";
 import sendResponseMessage from "../../utils/sendResponse";
 import { IDonation } from "./donation.interface";
 import { DonationService } from "./donation.service";
-import { DonationValidationSchema } from "./donation.validation";
+import { Types } from "mongoose";
 
 // Create a new Donation
 const createDonation = catchAsyncFunc(async (req, res) => {
-  const donationValidation = DonationValidationSchema.parse({
-    ...req.body,
-    bloodGroup: req.body.bloodGroup as keyof typeof BloodGroup,
-  });
+  const donorId = new Types.ObjectId(req.body.donorId);
+  const receiverId = new Types.ObjectId(req.body.receiverId);
 
-  const donation = await DonationService.createDonation(
-    donationValidation as unknown as IDonation
-  );
+  const donationData = { ...req.body, donorId, receiverId } as IDonation;
+
+  const donation = await DonationService.createDonation(donationData);
 
   sendResponseMessage(res, {
     success: true,
