@@ -8,8 +8,24 @@ const createUser = async (userData: IUser): Promise<IUser> => {
 };
 
 // Get all users
-const getAllUsers = async (): Promise<IUser[]> => {
-  return await UserModel.find().select("-password -__v");
+const getAllUsers = async () => {
+  const data = await UserModel.find().select("-password -__v");
+  const userCount = data.length;
+  return {
+    userCount,
+    data,
+  };
+};
+
+// Get users by filter
+const getUsersByFilter = async (filter: Partial<IUser>) => {
+  const users = await UserModel.find(filter).select(
+    "-password -__v -oldPasswords -isDeleted -socialLink -referrer -socialLogin -role -needPasswordReset -createdAt -updatedAt"
+  );
+  // console.log("users", users);
+  const userCount = users.length;
+  const data = users.map((user) => user.toObject() as IUser);
+  return { userCount, userData: data };
 };
 
 // Get a user by ID
@@ -34,6 +50,18 @@ const updateUser = async (
     runValidators: true,
   }).select("-password -__v");
   return updatedUser as IUser | null;
+};
+
+// Push a new outside donation in zero index
+const pushOutsideDonation = async (
+  userId: string,
+  outsideDonation: { address: string; date?: Date }
+) => {
+  await UserModel.findByIdAndUpdate(
+    userId,
+    { $push: { outsideDonation: { $each: [outsideDonation], $position: 0 } } },
+    { new: true }
+  );
 };
 
 // Delete a user by ID
@@ -66,9 +94,11 @@ const checkUsernameExists = async (username: string): Promise<boolean> => {
 export const UserService = {
   createUser,
   getAllUsers,
+  getUsersByFilter,
   getUserById,
   getUserByUsername,
   updateUser,
+  pushOutsideDonation,
   deleteUser,
   checkEmailExists,
   checkUsernameExists,

@@ -1,6 +1,6 @@
 import { Schema, model, Document } from "mongoose";
 import { IUser } from "./user.interface";
-import { ROLE, STATUS, BloodGroup } from "../../enums/userEnum";
+import { ROLE, BloodGroup } from "../../enums/userEnum";
 import { hashPasswordHelper } from "../../helpers/hashPasswordHelper";
 
 // Mongoose Schema for Address
@@ -14,6 +14,11 @@ const addressSchema = new Schema({
 const socialLinkSchema = new Schema({
   provider: { type: String, required: true },
   id: { type: String, required: false },
+});
+
+const outsideDonationSchema = new Schema({
+  address: { type: String, required: true },
+  date: { type: Date, required: true },
 });
 
 // Mongoose Schema for User
@@ -42,15 +47,15 @@ const userSchema = new Schema<IUser & Document>(
     plasma: { type: Boolean, required: true },
     permanentAddress: { type: addressSchema, required: true },
     presentAddress: { type: addressSchema, required: true },
-    availability: {
-      type: String,
-      enum: [...Object.values(STATUS)],
-      required: true,
-      default: STATUS.ACTIVE,
-    },
+    isActivate: { type: Boolean, default: true },
     userBadges: [{ type: Schema.Types.ObjectId, ref: "Badge" }],
-    donationHistory: [{ type: Schema.Types.ObjectId, ref: "DonationHistory" }],
-    referrer: { type: Schema.Types.ObjectId, ref: "User" },
+    requestRequested: [{ type: Schema.Types.ObjectId, ref: "Request" }],
+    requestReceived: [{ type: Schema.Types.ObjectId, ref: "Request" }],
+    donated: [{ type: Schema.Types.ObjectId, ref: "Donation" }],
+    donationReceived: [{ type: Schema.Types.ObjectId, ref: "Donation" }],
+    outsideDonation: [{ type: outsideDonationSchema, required: true }], // Date of last donation only for new users to track the last donation date
+    reference: { type: String, required: false }, // Optional referrer (username)
+    refereed: [{ type: Schema.Types.ObjectId, ref: "User" }], // Referrer User
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     isDeleted: { type: Boolean, default: false },

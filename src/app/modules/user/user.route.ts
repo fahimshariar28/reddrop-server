@@ -11,6 +11,13 @@ router.post("/", UserController.createUser);
 // Route to get all users
 router.get("/", authVerification(ROLE.ADMIN), UserController.getAllUsers);
 
+// Route to get users by filter
+router.get(
+  "/filter",
+  authVerification(ROLE.ADMIN, ROLE.USER),
+  UserController.getUsersByFilter
+);
+
 // Route to get a user by ID
 router.get(
   "/:id",
@@ -32,6 +39,13 @@ router.put(
   UserController.updateUser
 );
 
+// Route to push a new outside donation
+router.put(
+  "/outside-donation/:id",
+  authVerification(ROLE.ADMIN, ROLE.USER),
+  UserController.pushOutsideDonation
+);
+
 // Route to delete a user by ID
 router.put(
   "/delete/:id",
@@ -45,4 +59,4 @@ router.get("/check-email/:email", UserController.checkDuplicateEmail);
 // Route to check if a username exists
 router.get("/check-username/:username", UserController.checkDuplicateUsername);
 
-export const userRouter = router;
+export const userRoute = router;

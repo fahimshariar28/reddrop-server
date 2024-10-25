@@ -4,6 +4,7 @@ import sendResponseMessage from "../../utils/sendResponse";
 import { UserService } from "./user.service";
 import { IUser } from "./user.interface";
 import { BloodGroup } from "../../enums/userEnum";
+import { userFilter } from "./user.filter";
 
 // Create a new user
 const createUser = catchAsyncFunc(async (req, res) => {
@@ -26,6 +27,20 @@ const createUser = catchAsyncFunc(async (req, res) => {
 // Get all users
 const getAllUsers = catchAsyncFunc(async (req, res) => {
   const users = await UserService.getAllUsers();
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: 200,
+    message: "Users fetched successfully",
+    data: users,
+  });
+});
+
+// Get users by filter
+const getUsersByFilter = catchAsyncFunc(async (req, res) => {
+  const filters = userFilter(req.query);
+
+  const users = await UserService.getUsersByFilter(filters as Partial<IUser>);
 
   sendResponseMessage(res, {
     success: true,
@@ -104,6 +119,20 @@ const updateUser = catchAsyncFunc(async (req, res) => {
   });
 });
 
+// Push a new outside donation
+const pushOutsideDonation = catchAsyncFunc(async (req, res) => {
+  const id = req.user.id;
+  const { address, date } = req.body;
+
+  await UserService.pushOutsideDonation(id, { address, date });
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: 200,
+    message: "Outside donation pushed successfully",
+  });
+});
+
 // Delete a user by ID
 const deleteUser = catchAsyncFunc(async (req, res) => {
   const id = req.params.id;
@@ -156,9 +185,11 @@ const checkDuplicateUsername = catchAsyncFunc(async (req, res) => {
 export const UserController = {
   createUser,
   getAllUsers,
+  getUsersByFilter,
   getUserById,
   getUserByUsername,
   updateUser,
+  pushOutsideDonation,
   deleteUser,
   checkDuplicateEmail,
   checkDuplicateUsername,

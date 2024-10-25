@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ROLE, STATUS, BloodGroup } from "../../enums/userEnum";
+import { ROLE, BloodGroup } from "../../enums/userEnum";
 
 // Zod schema for the Address object
 const addressSchema = z.object({
@@ -12,6 +12,11 @@ const addressSchema = z.object({
 const socialLinkSchema = z.object({
   provider: z.string().min(1, "Provider is required"),
   id: z.string().optional(),
+});
+
+const outsideDonationSchema = z.object({
+  address: z.string().min(1, "Address is required"),
+  date: z.date(),
 });
 
 // Zod schema for User validation
@@ -32,13 +37,13 @@ export const userValidationSchema = z.object({
   plasma: z.boolean({ required_error: "Plasma eligibility is required" }),
   permanentAddress: addressSchema,
   presentAddress: addressSchema,
-  availability: z
-    .enum([STATUS.ACTIVE, STATUS.Inactive], {
-      required_error: "Availability status is required",
-    })
-    .optional(),
+  isActivate: z.boolean().default(true),
   userBadges: z.array(z.string()).optional(), // Array of Badge ObjectIds (as strings), can be optional during creation
-  donationHistory: z.array(z.string()).optional(), // Array of Donation History ObjectIds (as strings), can be optional during creation
+  requestRequested: z.array(z.string()).optional(), // Array of Request ObjectIds
+  requestReceived: z.array(z.string()).optional(), // Array of Request ObjectIds
+  donated: z.array(z.string()).optional(), // Array of Donation History ObjectIds
+  donationReceived: z.array(z.string()).optional(), // Array of Donation History ObjectIds
+  outsideDonation: z.array(outsideDonationSchema).optional(), // Date of last donation only for new users to track the last donation date
   referrer: z.string().optional(), // Optional referrer (username)
   createdAt: z.date().optional(),
   updatedAt: z.date().optional(),

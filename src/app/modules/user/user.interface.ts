@@ -1,5 +1,5 @@
 import { Types } from "mongoose";
-import { ROLE, STATUS, BloodGroup } from "../../enums/userEnum";
+import { ROLE, BloodGroup } from "../../enums/userEnum";
 
 // Interface for Address object
 type Address = {
@@ -11,6 +11,19 @@ type Address = {
 type ISocialLink = {
   provider: string;
   id?: string;
+};
+
+type IOutsideDonation = {
+  address: string;
+  date: Date;
+};
+
+export type IFilters = {
+  bloodGroup?: string;
+  division?: string;
+  district?: string;
+  upazila?: string;
+  plasma?: boolean;
 };
 
 // User interface
@@ -30,10 +43,15 @@ export type IUser = {
   plasma: boolean;
   permanentAddress: Address;
   presentAddress: Address;
-  availability: (typeof STATUS)[keyof typeof STATUS];
+  isActivate: boolean;
   userBadges: Types.ObjectId[]; // Array of Badge ObjectIds
-  donationHistory: Types.ObjectId[]; // Array of Donation History ObjectIds
-  referrer?: string; // Username of the referrer
+  requestRequested?: Types.ObjectId[]; // Array of Request ObjectIds
+  requestReceived?: Types.ObjectId[]; // Array of Request ObjectIds
+  donated?: Types.ObjectId[]; // Array of Donation History ObjectIds
+  donationReceived?: Types.ObjectId[]; // Array of Donation History ObjectIds
+  outsideDonation?: IOutsideDonation[]; // Date of last donation only for new users to track the last donation date
+  reference?: string; // Username of the referrer
+  refereed?: Types.ObjectId[]; // Referrer User ObjectId
   createdAt?: Date;
   updatedAt?: Date;
   isDeleted: boolean;
