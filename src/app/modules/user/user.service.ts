@@ -4,6 +4,19 @@ import { IUser } from "./user.interface";
 // Create a new user
 const createUser = async (userData: IUser): Promise<IUser> => {
   const user = new UserModel(userData);
+
+  if (user.reference) {
+    const referrer = await UserModel.findById(user.reference);
+    if (referrer) {
+      if (referrer.refereed) {
+        referrer.refereed.push(user._id);
+      } else {
+        referrer.refereed = [user._id];
+      }
+      await referrer.save();
+    }
+  }
+
   return await user.save();
 };
 
@@ -19,8 +32,8 @@ const getAllUsers = async () => {
 
 // Get users by filter
 const getUsersByFilter = async (filter: Partial<IUser>) => {
-  const users = await UserModel.find(filter).select(
-    "-password -__v -oldPasswords -isDeleted -socialLink -referrer -socialLogin -role -needPasswordReset -createdAt -updatedAt"
+  const users = await UserModel.find({ ...filter, isDeleted: false }).select(
+    "-password -__v -oldPasswords -isDeleted -socialLink -reference -refereed -socialLogin -role -needPasswordReset -createdAt -updatedAt -notifications -outsideDonation -permanentAddress"
   );
   // console.log("users", users);
   const userCount = users.length;
@@ -30,14 +43,18 @@ const getUsersByFilter = async (filter: Partial<IUser>) => {
 
 // Get a user by ID
 const getUserById = async (userId: string): Promise<IUser | null> => {
-  const user = await UserModel.findById(userId).select("-password -__v");
+  const user = await UserModel.findById(userId)
+    .select("-password -__v")
+    .populate({
+      path: "userBadges socialLink requestRequested requestReceived donated donationReceived notifications refereed outsideDonation ",
+    });
   return user ? (user.toObject() as IUser) : null;
 };
 
 // Get a user by username
 const getUserByUsername = async (username: string): Promise<IUser | null> => {
   const user = await UserModel.findOne({ username }).select("-password -__v");
-  return user ? (user.toObject() as IUser) : null;
+  return user?._id || null;
 };
 
 // Update a user by ID

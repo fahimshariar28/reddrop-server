@@ -33,6 +33,7 @@ export type IUser = {
   role: (typeof ROLE)[keyof typeof ROLE];
   name: string;
   email: string;
+  profilePicture?: string;
   password: string; // Should be a hashed password
   needPasswordReset: boolean;
   oldPasswords?: string[]; // Array of hashed passwords
@@ -50,7 +51,7 @@ export type IUser = {
   donated?: Types.ObjectId[]; // Array of Donation History ObjectIds
   donationReceived?: Types.ObjectId[]; // Array of Donation History ObjectIds
   outsideDonation?: IOutsideDonation[]; // Date of last donation only for new users to track the last donation date
-  reference?: string; // Username of the referrer
+  reference?: Types.ObjectId; // Referrer User ObjectId
   refereed?: Types.ObjectId[]; // Referrer User ObjectId
   notifications?: Types.ObjectId[]; // Array of Notification ObjectIds
   createdAt?: Date;

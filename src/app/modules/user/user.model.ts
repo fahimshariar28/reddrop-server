@@ -33,6 +33,7 @@ const userSchema = new Schema<IUser & Document>(
     },
     name: { type: String, required: true, maxlength: 100 },
     email: { type: String, required: true, unique: true },
+    profilePicture: { type: String, required: false },
     password: { type: String, required: true }, // Assuming hashed password
     needPasswordReset: { type: Boolean, default: false },
     oldPasswords: { type: [String], required: false }, // Array of hashed passwords
