@@ -19,6 +19,13 @@ router.get(
   FeedbackController.getAllFeedbacks
 );
 
+// Get feedbacks by user ID
+router.get(
+  "/user",
+  authVerification(ROLE.USER, ROLE.ADMIN),
+  FeedbackController.getFeedbacksByUserId
+);
+
 // Get feedback by ID
 router.get(
   "/:id",
@@ -26,11 +33,11 @@ router.get(
   FeedbackController.getFeedbackById
 );
 
-// Get feedbacks by user ID
-router.get(
-  "/user",
-  authVerification(ROLE.USER, ROLE.ADMIN),
-  FeedbackController.getFeedbacksByUserId
+// Update feedback
+router.put(
+  "/:id",
+  authVerification(ROLE.ADMIN, ROLE.USER),
+  FeedbackController.updateFeedback
 );
 
 export const feedbackRoute = router;

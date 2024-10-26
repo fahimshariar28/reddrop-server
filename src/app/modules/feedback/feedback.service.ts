@@ -32,11 +32,14 @@ const getFeedbacksByUserId = async (id: ObjectId) => {
     $or: [{ receiverId: id }, { donorId: id }],
   }).exec();
 
-  const received = feedback.filter((feed) => feed.receiverId === id);
-  const donated = feedback.filter((feed) => feed.donorId === id);
+  return feedback;
+};
 
-  const data = { received, donated };
-  return data;
+// Update Feedback
+const updateFeedback = async (id: string, feedbackData: IFeedback) => {
+  return await FeedbackModel.findByIdAndUpdate(id, feedbackData, {
+    new: true,
+  }).exec();
 };
 
 export const FeedbackService = {
@@ -44,4 +47,5 @@ export const FeedbackService = {
   getAllFeedbacks,
   getFeedbackById,
   getFeedbacksByUserId,
+  updateFeedback,
 };

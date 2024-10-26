@@ -67,9 +67,24 @@ const getFeedbacksByUserId = catchAsyncFunc(async (req, res) => {
   });
 });
 
+// Update feedback
+const updateFeedback = catchAsyncFunc(async (req, res) => {
+  const { id } = req.params;
+
+  const feedback = await FeedbackService.updateFeedback(id, req.body);
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: 200,
+    message: "Feedback updated successfully",
+    data: feedback,
+  });
+});
+
 export const FeedbackController = {
   createFeedback,
   getAllFeedbacks,
   getFeedbackById,
   getFeedbacksByUserId,
+  updateFeedback,
 };
