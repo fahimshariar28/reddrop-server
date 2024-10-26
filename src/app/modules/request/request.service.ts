@@ -17,12 +17,12 @@ const donationRequest = async (requestData: IRequest) => {
 
   // add the request to the user's requested list
   await UserModel.findByIdAndUpdate(data.receiverId, {
-    $push: { requestRequested: data._id },
+    $push: { requestRequested: { $each: [data._id], $position: 0 } },
   }).exec();
 
   // add the request to the user's received list
   await UserModel.findByIdAndUpdate(data.donorId, {
-    $push: { requestReceived: data._id },
+    $push: { requestReceived: { $each: [data._id], $position: 0 } },
   }).exec();
 
   return data;
