@@ -5,6 +5,7 @@ import { requestRoute } from "../modules/request/request.route";
 import { donationRoute } from "../modules/donation/donation.router";
 import { feedbackRoute } from "../modules/feedback/feedback.route";
 import { notificationRoute } from "../modules/notification/notification.route";
+import { badgeRoute } from "../modules/badge/badge.route";
 export const router = Router();
 
 const moduleRoutes = [
@@ -31,6 +32,10 @@ const moduleRoutes = [
   {
     path: "/notification",
     route: notificationRoute,
+  },
+  {
+    path: "/badge",
+    route: badgeRoute,
   },
 ];
 
