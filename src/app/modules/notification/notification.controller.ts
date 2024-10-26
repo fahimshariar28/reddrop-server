@@ -2,7 +2,6 @@ import { notificationService } from "./notification.service";
 import catchAsyncFunc from "../../utils/catchAsyncFunc";
 import sendResponseMessage from "../../utils/sendResponse";
 import httpStatus from "http-status";
-import { Schema } from "mongoose";
 
 // Create notification
 export const createNotification = catchAsyncFunc(async (req, res) => {
@@ -18,7 +17,7 @@ export const createNotification = catchAsyncFunc(async (req, res) => {
 
 // Get Notifications by user id
 export const getNotificationsByUserId = catchAsyncFunc(async (req, res) => {
-  const id = new Schema.Types.ObjectId(req.user.id);
+  const id = req.user.id;
 
   const notifications = await notificationService.getNotificationsByUserId(id);
 
@@ -32,8 +31,10 @@ export const getNotificationsByUserId = catchAsyncFunc(async (req, res) => {
 
 // Update notification as read
 export const updateNotification = catchAsyncFunc(async (req, res) => {
-  const id = new Schema.Types.ObjectId(req.params.notificationId);
-  const notification = await notificationService.updateNotification(id);
+  const id = req.params.notificationId;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const notification = await notificationService.updateNotification(id as any);
   sendResponseMessage(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -44,8 +45,10 @@ export const updateNotification = catchAsyncFunc(async (req, res) => {
 
 // Delete notification
 export const deleteNotification = catchAsyncFunc(async (req, res) => {
-  const id = new Schema.Types.ObjectId(req.params.notificationId);
-  const notification = await notificationService.deleteNotification(id);
+  const id = req.params.notificationId;
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const notification = await notificationService.deleteNotification(id as any);
 
   sendResponseMessage(res, {
     success: true,

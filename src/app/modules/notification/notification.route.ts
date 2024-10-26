@@ -28,7 +28,7 @@ router.put(
 
 // Delete notification
 router.put(
-  "/:notificationId",
+  "/delete/:notificationId",
   authVerification(ROLE.ADMIN, ROLE.USER),
   notificationController.deleteNotification
 );
