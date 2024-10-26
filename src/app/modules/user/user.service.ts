@@ -23,7 +23,7 @@ const createUser = async (userData: IUser): Promise<IUser> => {
 
 // Get all users
 const getAllUsers = async () => {
-  const data = await UserModel.find().select("-password -__v");
+  const data = await UserModel.find().select("-password -__v -oldPasswords");
   const userCount = data.length;
   return {
     userCount,
@@ -45,10 +45,10 @@ const getUsersByFilter = async (filter: Partial<IUser>) => {
 // Get a user by ID
 const getUserById = async (userId: string): Promise<IUser | null> => {
   const user = await UserModel.findById(userId)
-    .select("-password -__v")
+    .select("-password -__v -oldPasswords -needPasswordReset")
     .populate({
-      // TODO: Populate userBadges, notifications field
-      path: "socialLink requestRequested requestReceived donated donationReceived refereed outsideDonation",
+      path: "socialLink notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
+      // select: "-__v -password -oldPasswords", // Ensure fields are excluded in populated documents
     });
   return user ? (user.toObject() as IUser) : null;
 };
@@ -56,11 +56,12 @@ const getUserById = async (userId: string): Promise<IUser | null> => {
 // Get my profile
 const getMyProfile = async (userId: ObjectId): Promise<IUser | null> => {
   const user = await UserModel.findById(userId)
-    .select("-password -__v")
+    .select("-password -__v -oldPasswords")
     .populate({
-      // TODO: Populate userBadges, notifications field
-      path: "socialLink requestRequested requestReceived donated donationReceived refereed outsideDonation",
+      // TODO: Populate userBadges field
+      path: "socialLink notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
     });
+
   return user ? (user.toObject() as IUser) : null;
 };
 
@@ -78,7 +79,7 @@ const updateUser = async (
   const updatedUser = await UserModel.findByIdAndUpdate(userId, userData, {
     new: true,
     runValidators: true,
-  }).select("-password -__v");
+  }).select("-password -__v -oldPasswords -needPasswordReset");
   return updatedUser as IUser | null;
 };
 
