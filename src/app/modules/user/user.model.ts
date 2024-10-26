@@ -49,7 +49,7 @@ const userSchema = new Schema<IUser & Document>(
     permanentAddress: { type: addressSchema, required: true },
     presentAddress: { type: addressSchema, required: true },
     isActivate: { type: Boolean, default: true },
-    userBadges: [{ type: Schema.Types.ObjectId, ref: "Badge" }],
+    userBadges: [{ type: Schema.Types.ObjectId, ref: "UserBadge" }],
     requestRequested: [{ type: Schema.Types.ObjectId, ref: "Request" }],
     requestReceived: [{ type: Schema.Types.ObjectId, ref: "Request" }],
     donated: [{ type: Schema.Types.ObjectId, ref: "Donation" }],
