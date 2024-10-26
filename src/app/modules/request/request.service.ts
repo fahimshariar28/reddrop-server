@@ -58,18 +58,6 @@ const updateRequest = async (id: string, data: IRequestStatus) => {
     { new: true }
   ).exec();
 
-  // If the status is accepted, add the request to the user's donated & donationReceived list
-  if (data.status === RequestStatus.ACCEPTED && updatedData) {
-    await UserModel.findByIdAndUpdate(updatedData.donorId, {
-      $push: { donated: updatedData._id },
-    }).exec();
-  }
-  if (data.status === RequestStatus.ACCEPTED && updatedData) {
-    await UserModel.findByIdAndUpdate(updatedData.receiverId, {
-      $push: { donationReceived: updatedData._id },
-    }).exec();
-  }
-
   return updatedData;
 };
 
