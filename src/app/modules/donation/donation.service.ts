@@ -18,12 +18,12 @@ const createDonation = async (donationData: IDonation) => {
 
   // add the donation to the user's donated list
   await UserModel.findByIdAndUpdate(data.donorId, {
-    $push: { donated: data._id },
+    $push: { donated: { $each: [data._id], $position: 0 } },
   }).exec();
 
   // add the donation to the user's received list
   await UserModel.findByIdAndUpdate(data.receiverId, {
-    $push: { donationReceived: data._id },
+    $push: { donationReceived: { $each: [data._id], $position: 0 } },
   }).exec();
 
   return data;
