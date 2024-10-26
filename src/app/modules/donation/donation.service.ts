@@ -2,9 +2,17 @@ import { ObjectId } from "mongoose";
 import UserModel from "../user/user.model";
 import { IDonation, IDonationStatus } from "./donation.interface";
 import DonationModel from "./donation.model";
+import { donationStatus } from "../../enums/donationEnum";
 
 // Create Donation
 const createDonation = async (donationData: IDonation) => {
+  donationData.donationStatus = [
+    {
+      status: donationStatus.PENDING,
+      time: new Date(),
+    },
+  ];
+
   const donation = new DonationModel(donationData);
   const data = await donation.save();
 
@@ -37,24 +45,14 @@ const getDonationsByUserId = async (id: ObjectId) => {
     $or: [{ receiverId: id }, { donorId: id }],
   }).exec();
 
-  const received = donation.filter((don) => don.receiverId === id);
-  const donated = donation.filter((don) => don.donorId === id);
-
-  const data = { received, donated };
-  return data;
+  return donation;
 };
 
 // Update Donation status
 const updateDonationStatus = async (id: string, data: IDonationStatus) => {
   return await DonationModel.findByIdAndUpdate(
     id,
-    {
-      $set: {
-        "donationStatus.0.status": data.status,
-        "donationStatus.0.time": new Date(),
-        ...(data.reason && { "donationStatus.0.reason": data.reason }),
-      },
-    },
+    { $push: { donationStatus: { $each: [data], $position: 0 } } },
     { new: true }
   ).exec();
 };

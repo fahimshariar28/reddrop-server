@@ -24,7 +24,7 @@ export type IDonation = {
   isEmergency: boolean;
   bloodGroup: (typeof BloodGroup)[keyof typeof BloodGroup];
   plasma: boolean;
-  donationTime: Date;
+  donationTime?: Date;
   donationStatus: IDonationStatus[];
-  feedback: ObjectId;
+  feedback?: ObjectId;
 };

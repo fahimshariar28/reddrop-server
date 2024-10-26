@@ -29,13 +29,13 @@ const donationSchema = new Schema({
   isEmergency: { type: Boolean, required: true },
   bloodGroup: { type: String, required: true },
   plasma: { type: Boolean, required: true },
-  donationTime: { type: Date, required: true },
+  donationTime: { type: Date, required: false },
   donationStatus: {
     type: [donationStatusSchema],
     required: true,
     default: [{ status: donationStatus.PENDING, time: new Date() }], // Default is also an array
   },
-  feedback: { type: Schema.Types.ObjectId, ref: "Feedback", required: true },
+  feedback: { type: Schema.Types.ObjectId, ref: "Feedback", required: false },
 });
 
 const DonationModel = model<IDonation & Document>("Donation", donationSchema);
