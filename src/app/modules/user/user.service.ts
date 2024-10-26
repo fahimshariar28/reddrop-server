@@ -47,7 +47,7 @@ const getUserById = async (userId: string): Promise<IUser | null> => {
   const user = await UserModel.findById(userId)
     .select("-password -__v -oldPasswords -needPasswordReset")
     .populate({
-      path: "socialLink notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
+      path: "socialLink userBadges notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
       // select: "-__v -password -oldPasswords", // Ensure fields are excluded in populated documents
     });
   return user ? (user.toObject() as IUser) : null;
@@ -58,8 +58,7 @@ const getMyProfile = async (userId: ObjectId): Promise<IUser | null> => {
   const user = await UserModel.findById(userId)
     .select("-password -__v -oldPasswords")
     .populate({
-      // TODO: Populate userBadges field
-      path: "socialLink notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
+      path: "socialLink userBadges notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
     });
 
   return user ? (user.toObject() as IUser) : null;
