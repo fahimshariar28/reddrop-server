@@ -29,6 +29,11 @@ const userLogin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
     payload?.password,
     isUserExists?.password
   );
+
+  if (isUserExists?.isDeleted) {
+    throw new GenericError(httpStatus.UNAUTHORIZED, "User is deleted");
+  }
+
   //   console.log(isPasswordMatched);
   if (!isPasswordMatched) {
     throw new GenericError(httpStatus.UNAUTHORIZED, "Password not matched");
