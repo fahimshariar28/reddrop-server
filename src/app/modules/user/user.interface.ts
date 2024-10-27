@@ -44,7 +44,7 @@ export type IUser = {
   plasma: boolean;
   permanentAddress: Address;
   presentAddress: Address;
-  isActivate: boolean;
+  isActive: boolean;
   userBadges: Types.ObjectId[]; // Array of Badge ObjectIds
   requestRequested?: Types.ObjectId[]; // Array of Request ObjectIds
   requestReceived?: Types.ObjectId[]; // Array of Request ObjectIds

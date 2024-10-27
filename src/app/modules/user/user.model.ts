@@ -48,7 +48,7 @@ const userSchema = new Schema<IUser & Document>(
     plasma: { type: Boolean, required: true },
     permanentAddress: { type: addressSchema, required: true },
     presentAddress: { type: addressSchema, required: true },
-    isActivate: { type: Boolean, default: true },
+    isActive: { type: Boolean, default: false },
     userBadges: [{ type: Schema.Types.ObjectId, ref: "Badge" }],
     requestRequested: [{ type: Schema.Types.ObjectId, ref: "Request" }],
     requestReceived: [{ type: Schema.Types.ObjectId, ref: "Request" }],

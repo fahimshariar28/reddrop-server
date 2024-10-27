@@ -121,6 +121,16 @@ const checkUsernameExists = async (username: string): Promise<boolean> => {
   return !!user; // Return true if user exists, false otherwise
 };
 
+// Set user as active
+const setUserActive = async (userId: string) => {
+  await UserModel.findByIdAndUpdate(userId, { isActive: true });
+};
+
+// Set user as inactive
+const setUserInactive = async (userId: string) => {
+  await UserModel.findByIdAndUpdate(userId, { isActive: false });
+};
+
 export const UserService = {
   createUser,
   getAllUsers,
@@ -133,4 +143,6 @@ export const UserService = {
   deleteUser,
   checkEmailExists,
   checkUsernameExists,
+  setUserActive,
+  setUserInactive,
 };
