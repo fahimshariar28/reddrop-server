@@ -41,9 +41,19 @@ const getDonationById = async (id: string) => {
 
 // Get Donations by user id
 const getDonationsByUserId = async (id: ObjectId) => {
-  const donation = await DonationModel.find({
-    $or: [{ receiverId: id }, { donorId: id }],
+  // const donation = await DonationModel.find({
+  //   $or: [{ receiverId: id }, { donorId: id }],
+  // }).exec();
+
+  // find donations where the user is the donor
+  const donationsAsDonor = await DonationModel.find({ donorId: id }).exec();
+
+  // find donations where the user is the receiver
+  const donationsAsReceiver = await DonationModel.find({
+    receiverId: id,
   }).exec();
+
+  const donation = donationsAsDonor.concat(donationsAsReceiver);
 
   return donation;
 };
