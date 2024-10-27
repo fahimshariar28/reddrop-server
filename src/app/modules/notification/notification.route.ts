@@ -6,11 +6,11 @@ import { notificationController } from "./notification.controller";
 const router = Router();
 
 // Create notification
-router.post(
-  "/",
-  authVerification(ROLE.ADMIN, ROLE.USER),
-  notificationController.createNotification
-);
+// router.post(
+//   "/",
+//   authVerification(ROLE.ADMIN, ROLE.USER),
+//   notificationController.createNotification
+// );
 
 // Get Notifications by user id
 router.get(

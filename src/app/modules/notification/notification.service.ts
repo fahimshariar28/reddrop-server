@@ -31,6 +31,14 @@ const updateNotification = async (
   );
 };
 
+// Update all notifications as read
+const updateAllNotifications = async (userId: ObjectId) => {
+  return await NotificationModel.updateMany(
+    { userId, isDeleted: false },
+    { isRead: true }
+  );
+};
+
 // Delete notification
 const deleteNotification = async (
   notificationId: ObjectId
@@ -47,5 +55,6 @@ export const notificationService = {
   createNotification,
   getNotificationsByUserId,
   updateNotification,
+  updateAllNotifications,
   deleteNotification,
 };

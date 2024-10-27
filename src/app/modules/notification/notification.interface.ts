@@ -1,6 +1,7 @@
 import { Types } from "mongoose";
 
 export type INotification = {
+  _id?: Types.ObjectId;
   userId: Types.ObjectId;
   title: string;
   message: string;

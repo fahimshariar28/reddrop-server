@@ -4,16 +4,15 @@ import sendResponseMessage from "../../utils/sendResponse";
 import httpStatus from "http-status";
 
 // Create notification
-export const createNotification = catchAsyncFunc(async (req, res) => {
-  const notification = await notificationService.createNotification(req.body);
-
-  sendResponseMessage(res, {
-    success: true,
-    statusCode: httpStatus.CREATED,
-    message: "Notification created successfully",
-    data: notification,
-  });
-});
+// export const createNotification = catchAsyncFunc(async (req, res) => {
+//   const notification = await notificationService.createNotification(req.body);
+//   sendResponseMessage(res, {
+//     success: true,
+//     statusCode: httpStatus.CREATED,
+//     message: "Notification created successfully",
+//     data: notification,
+//   });
+// });
 
 // Get Notifications by user id
 export const getNotificationsByUserId = catchAsyncFunc(async (req, res) => {
@@ -59,7 +58,7 @@ export const deleteNotification = catchAsyncFunc(async (req, res) => {
 });
 
 export const notificationController = {
-  createNotification,
+  // createNotification,
   getNotificationsByUserId,
   updateNotification,
   deleteNotification,
