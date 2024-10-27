@@ -28,9 +28,21 @@ const getFeedbackById = async (id: string) => {
 
 // Get Feedbacks by user id
 const getFeedbacksByUserId = async (id: ObjectId) => {
-  const feedback = await FeedbackModel.find({
-    $or: [{ receiverId: id }, { donorId: id }],
+  // const feedback = await FeedbackModel.find({
+  //   $or: [{ receiverId: id }, { donorId: id }],
+  // }).exec();
+
+  // find feedback where the user is the donor
+  const feedbackAsDonor = await FeedbackModel.find({
+    donorId: id,
   }).exec();
+
+  // find feedback where the user is the receiver
+  const feedbackAsReceiver = await FeedbackModel.find({
+    receiverId: id,
+  }).exec();
+
+  const feedback = feedbackAsDonor.concat(feedbackAsReceiver);
 
   return feedback;
 };
