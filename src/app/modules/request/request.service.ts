@@ -37,9 +37,20 @@ const getAllRequests = async () => {
 // Get requests by user id
 const getRequestsByUserId = async (id: ObjectId) => {
   // find from both receiverId and donorId
-  const request = await RequestModel.find({
-    $or: [{ receiverId: id }, { donorId: id }],
-  });
+  // const request = await RequestModel.find({
+  //   $or: [{ receiverId: id }, { donorId: id }],
+  // });
+
+  // find from receiverId
+  const received = await RequestModel.find({ receiverId: id });
+
+  // find from donorId
+  const requested = await RequestModel.find({ donorId: id });
+
+  const request = {
+    received,
+    requested,
+  };
 
   return request;
 };
