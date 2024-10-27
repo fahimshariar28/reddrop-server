@@ -1,5 +1,5 @@
 export const badgeTypeEnum = {
-  DONOR: "Donor",
-  RECEIVER: "Receiver",
-  COMMON: "Common",
+  Donor: "Donor",
+  Receiver: "Receiver",
+  Common: "Common",
 } as const;
