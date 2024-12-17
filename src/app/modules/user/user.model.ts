@@ -11,11 +11,6 @@ const addressSchema = new Schema({
   homeAddress: { type: String, required: false }, // Optional home address
 });
 
-const socialLinkSchema = new Schema({
-  provider: { type: String, required: true },
-  id: { type: String, required: false },
-});
-
 const outsideDonationSchema = new Schema({
   address: { type: String, required: true },
   date: { type: Date, required: true },
@@ -37,8 +32,6 @@ const userSchema = new Schema<IUser & Document>(
     password: { type: String, required: true }, // Assuming hashed password
     needPasswordReset: { type: Boolean, default: false },
     oldPasswords: { type: [String], required: false }, // Array of hashed passwords
-    socialLogin: { type: Boolean, default: false },
-    socialLink: { type: [socialLinkSchema], required: false }, // Array of Social login links
     number: { type: String, required: true, minlength: 10, maxlength: 15 },
     bloodGroup: {
       type: String,

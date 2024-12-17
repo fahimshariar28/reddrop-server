@@ -8,10 +8,6 @@ type Address = {
   upazila: string;
   homeAddress: string;
 };
-type ISocialLink = {
-  provider: string;
-  id?: string;
-};
 
 type IOutsideDonation = {
   address: string;
@@ -37,8 +33,6 @@ export type IUser = {
   password: string; // Should be a hashed password
   needPasswordReset: boolean;
   oldPasswords?: string[]; // Array of hashed passwords
-  socialLogin: boolean;
-  socialLink?: ISocialLink[]; // Array of objects of Social login link
   number: string;
   bloodGroup: (typeof BloodGroup)[keyof typeof BloodGroup];
   plasma: boolean;
