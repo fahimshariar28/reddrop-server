@@ -15,7 +15,7 @@ async function main() {
     socketSetup(httpServer); // Pass the httpServer to the socket setup
 
     httpServer.listen(config.port, () => {
-      console.log(`RoktoBondhu Server is running on port ${config.port}.`);
+      console.log(`Red Drop Server is running on port ${config.port}.`);
     });
   } catch (error) {
     console.log(error);
