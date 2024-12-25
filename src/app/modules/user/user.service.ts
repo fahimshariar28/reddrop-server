@@ -33,9 +33,14 @@ const getAllUsers = async () => {
 
 // Get users by filter
 const getUsersByFilter = async (filter: Partial<IUser>) => {
-  const users = await UserModel.find({ ...filter, isDeleted: false }).select(
-    "-password -__v -oldPasswords -isDeleted -socialLink -reference -refereed -socialLogin -role -needPasswordReset -createdAt -updatedAt -notifications -outsideDonation -permanentAddress"
-  );
+  const users = await UserModel.find({ ...filter, isDeleted: false })
+    .select(
+      "-password -__v -oldPasswords -isDeleted -socialLink -reference -refereed -socialLogin -role -needPasswordReset -createdAt -updatedAt -notifications -permanentAddress"
+    )
+    .populate({
+      path: "requestReceived donated outsideDonation userBadges",
+    });
+
   // console.log("users", users);
   const userCount = users.length;
   const data = users.map((user) => user.toObject() as IUser);
