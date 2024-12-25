@@ -12,11 +12,7 @@ router.post("/", UserController.createUser);
 router.get("/", authVerification(ROLE.ADMIN), UserController.getAllUsers);
 
 // Route to get users by filter
-router.get(
-  "/filter",
-  authVerification(ROLE.ADMIN, ROLE.USER),
-  UserController.getUsersByFilter
-);
+router.get("/filter", UserController.getUsersByFilter);
 
 // Route to get my profile
 router.get(

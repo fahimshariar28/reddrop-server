@@ -33,17 +33,51 @@ const getAllUsers = async () => {
 
 // Get users by filter
 const getUsersByFilter = async (filter: Partial<IUser>) => {
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
   const users = await UserModel.find({ ...filter, isDeleted: false })
     .select(
       "-password -__v -oldPasswords -isDeleted -socialLink -reference -refereed -socialLogin -role -needPasswordReset -createdAt -updatedAt -notifications -permanentAddress"
     )
-    .populate({
-      path: "requestReceived donated outsideDonation userBadges",
-    });
+    .populate([
+      { path: "donated", select: "donatedAt", model: "Donation" },
+      { path: "outsideDonation", select: "date" },
+      {
+        path: "requestReceived",
+        populate: {
+          path: "requestStatus",
+          select: "status time",
+          model: "RequestStatus",
+        },
+      },
+    ]);
 
-  // console.log("users", users);
-  const userCount = users.length;
-  const data = users.map((user) => user.toObject() as IUser);
+  const filteredUsers = users.filter((user) => {
+    const hasRecentDonation =
+      user?.donated?.some(
+        (donation) =>
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          (donation as any)?.donationTime &&
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          new Date((donation as any).donationTime) >= threeMonthsAgo
+      ) ||
+      user?.outsideDonation?.some(
+        (donation) => donation.date && new Date(donation.date) >= threeMonthsAgo
+      );
+
+    const hasAcceptedRequest = user?.requestReceived?.some((request) =>
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (request as any)?.requestStatus?.some(
+        (status: { status: string }) => status.status === "accepted"
+      )
+    );
+
+    return !(hasRecentDonation || hasAcceptedRequest);
+  });
+
+  const userCount = filteredUsers.length;
+  const data = filteredUsers.map((user) => user.toObject() as IUser);
   return { userCount, userData: data };
 };
 
@@ -53,7 +87,6 @@ const getUserById = async (userId: string): Promise<IUser | null> => {
     .select("-password -__v -oldPasswords -needPasswordReset")
     .populate({
       path: "socialLink userBadges notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
-      // select: "-__v -password -oldPasswords", // Ensure fields are excluded in populated documents
     });
   return user ? (user.toObject() as IUser) : null;
 };
