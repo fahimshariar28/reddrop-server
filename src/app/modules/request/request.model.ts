@@ -38,6 +38,7 @@ const requestSchema = new Schema({
   location: { type: addressSchema, required: true },
   patientProblem: { type: String, required: true },
   requestStatus: { type: [statusSchema], required: true },
+  time: { type: Date, required: true },
   // requestExpiresAt: { type: Date, required: false },
 });
 

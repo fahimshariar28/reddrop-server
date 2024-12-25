@@ -24,5 +24,6 @@ export type IRequest = {
   location: IRequestLocation;
   patientProblem: string;
   requestStatus: IRequestStatus[];
+  time: Date;
   // requestExpiresAt?: Date;
 };
