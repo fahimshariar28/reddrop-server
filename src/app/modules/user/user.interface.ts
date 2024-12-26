@@ -49,7 +49,5 @@ export type IUser = {
   reference?: Types.ObjectId; // Referrer User ObjectId
   refereed?: Types.ObjectId[]; // Referrer User ObjectId
   notifications?: Types.ObjectId[]; // Array of Notification ObjectIds
-  createdAt?: Date;
-  updatedAt?: Date;
   isDeleted: boolean;
 };

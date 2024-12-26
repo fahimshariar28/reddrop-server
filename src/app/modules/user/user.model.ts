@@ -52,8 +52,6 @@ const userSchema = new Schema<IUser & Document>(
     reference: { type: Schema.Types.ObjectId, ref: "User" }, // Referrer User
     refereed: [{ type: Schema.Types.ObjectId, ref: "User" }], // Referrer User
     notifications: [{ type: Schema.Types.ObjectId, ref: "Notification" }],
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
     isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
