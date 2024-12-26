@@ -28,6 +28,7 @@ const userSchema = new Schema<IUser & Document>(
     },
     name: { type: String, required: true, maxlength: 100 },
     email: { type: String, required: true, unique: true },
+    dob: { type: Date, required: true },
     profilePicture: { type: String, required: false },
     password: { type: String, required: true }, // Assuming hashed password
     needPasswordReset: { type: Boolean, default: false },
