@@ -6,7 +6,7 @@ type Address = {
   division: string;
   district: string;
   upazila: string;
-  homeAddress: string;
+  address: string;
 };
 
 type IOutsideDonation = {
@@ -37,8 +37,7 @@ export type IUser = {
   number: string;
   bloodGroup: (typeof BloodGroup)[keyof typeof BloodGroup];
   plasma: boolean;
-  permanentAddress: Address;
-  presentAddress: Address;
+  address: Address;
   isActive: boolean;
   userBadges: Types.ObjectId[]; // Array of Badge ObjectIds
   requestRequested?: Types.ObjectId[]; // Array of Request ObjectIds

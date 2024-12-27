@@ -8,7 +8,7 @@ const addressSchema = new Schema({
   division: { type: String, required: true },
   district: { type: String, required: true },
   upazila: { type: String, required: true },
-  homeAddress: { type: String, required: false }, // Optional home address
+  address: { type: String, required: false }, // Optional home address
 });
 
 const outsideDonationSchema = new Schema({
@@ -40,8 +40,7 @@ const userSchema = new Schema<IUser & Document>(
       required: true,
     },
     plasma: { type: Boolean, required: true },
-    permanentAddress: { type: addressSchema, required: true },
-    presentAddress: { type: addressSchema, required: true },
+    address: { type: addressSchema, required: true },
     isActive: { type: Boolean, default: false },
     userBadges: [{ type: Schema.Types.ObjectId, ref: "Badge" }],
     requestRequested: [{ type: Schema.Types.ObjectId, ref: "Request" }],
