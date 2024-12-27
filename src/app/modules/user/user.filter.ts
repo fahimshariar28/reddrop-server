@@ -18,7 +18,7 @@ export const userFilter = (query: Record<string, unknown>) => {
     const divisionValue = division as string;
     userFilter = {
       ...userFilter,
-      "presentAddress.division": divisionValue,
+      "address.division": divisionValue,
     };
   }
 
@@ -27,7 +27,7 @@ export const userFilter = (query: Record<string, unknown>) => {
     const districtValue = district as string;
     userFilter = {
       ...userFilter,
-      "presentAddress.district": districtValue,
+      "address.district": districtValue,
     };
   }
 
@@ -36,7 +36,7 @@ export const userFilter = (query: Record<string, unknown>) => {
     const upazilaValue = upazila as string;
     userFilter = {
       ...userFilter,
-      "presentAddress.upazila": upazilaValue,
+      "address.upazila": upazilaValue,
     };
   }
 
