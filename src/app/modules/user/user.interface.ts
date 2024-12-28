@@ -29,6 +29,7 @@ export type IUser = {
   role: (typeof ROLE)[keyof typeof ROLE];
   name: string;
   email: string;
+  isVerified?: boolean;
   dob: Date;
   profilePicture?: string;
   password: string; // Should be a hashed password
