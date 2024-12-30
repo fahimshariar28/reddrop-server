@@ -6,9 +6,14 @@ import { donationRoute } from "../modules/donation/donation.router";
 import { feedbackRoute } from "../modules/feedback/feedback.route";
 import { notificationRoute } from "../modules/notification/notification.route";
 import { badgeRoute } from "../modules/badge/badge.route";
+import { collaboratorRoute } from "../modules/collaborators/collaborators.route";
 export const router = Router();
 
 const moduleRoutes = [
+  {
+    path: "/collaborator",
+    route: collaboratorRoute,
+  },
   {
     path: "/location",
     route: locationRoute,
