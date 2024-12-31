@@ -2,7 +2,6 @@ import { Server } from "socket.io";
 import { Server as HttpServer } from "http";
 import { setupUserStatus } from "./userStatus";
 import { setupNotifications } from "./notifications";
-import { setupChat } from "./chat";
 
 const socketSetup = (httpServer: HttpServer) => {
   const io = new Server(httpServer, {
@@ -17,9 +16,6 @@ const socketSetup = (httpServer: HttpServer) => {
 
   // Set up the notifications
   setupNotifications(io);
-
-  // Set up the chat
-  setupChat(io);
 
   return io;
 };
