@@ -104,8 +104,12 @@ const getMyProfile = async (userId: ObjectId): Promise<IUser | null> => {
 
 // Get a user by username
 const getUserByUsername = async (username: string): Promise<IUser | null> => {
-  const user = await UserModel.findOne({ username }).select("-password -__v");
-  return user?._id || null;
+  const user = await UserModel.findOne({ username })
+    .select("-password -__v -oldPasswords -needPasswordReset")
+    .populate({
+      path: "userBadges notifications requestRequested requestReceived donated donationReceived refereed outsideDonation",
+    });
+  return user || null;
 };
 
 // Update a user by ID
