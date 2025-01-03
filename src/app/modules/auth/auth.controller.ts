@@ -38,9 +38,7 @@ const refreshToken = catchAsyncFunc(async (req, res) => {
     success: true,
     statusCode: 200,
     message: "Token refreshed successfully",
-    data: {
-      accessToken,
-    },
+    data: accessToken,
   });
 });
 
