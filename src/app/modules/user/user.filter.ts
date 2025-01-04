@@ -41,7 +41,7 @@ export const userFilter = (query: Record<string, unknown>) => {
   }
 
   // Filter by plasma if provided
-  if (plasma) {
+  if (plasma === true) {
     userFilter = { ...userFilter, plasma };
   }
 
