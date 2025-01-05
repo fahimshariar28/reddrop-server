@@ -3,14 +3,6 @@ import { IRequest } from "./request.interface";
 import { RequestStatus } from "../../enums/requestEnum";
 import { BloodGroup } from "../../enums/userEnum";
 
-// Mongoose Schema for Address
-const addressSchema = new Schema({
-  division: { type: String, required: true },
-  district: { type: String, required: true },
-  upazila: { type: String, required: true },
-  hospital: { type: String, required: true },
-});
-
 // Mongoose Schema for Status
 
 const statusSchema = new Schema({
@@ -34,8 +26,8 @@ const requestSchema = new Schema({
     required: true,
   },
   plasma: { type: Boolean, required: true },
-  isEmergency: { type: Boolean, required: true },
-  location: { type: addressSchema, required: true },
+  // isEmergency: { type: Boolean, required: true },
+  hospital: { type: String, required: true },
   patientProblem: { type: String, required: true },
   requestStatus: { type: [statusSchema], required: true },
   time: { type: Date, required: true },
