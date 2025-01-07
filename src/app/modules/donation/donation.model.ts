@@ -2,13 +2,6 @@ import { Schema, model, Document } from "mongoose";
 import { IDonation } from "./donation.interface";
 import { donationStatus } from "./../../enums/donationEnum";
 
-const addressSchema = new Schema({
-  division: { type: String, required: true },
-  district: { type: String, required: true },
-  upazila: { type: String, required: true },
-  hospital: { type: String, required: true },
-});
-
 const donationStatusSchema = new Schema({
   status: {
     type: String,
@@ -21,15 +14,14 @@ const donationStatusSchema = new Schema({
 
 // Mongoose Schema for Donation
 const donationSchema = new Schema({
-  donorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  receiverId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  donatedAt: { type: Date, required: true },
+  donor: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  receiver: { type: Schema.Types.ObjectId, ref: "User", required: true },
   patientProblem: { type: String, required: true },
-  location: { type: addressSchema, required: true },
-  isEmergency: { type: Boolean, required: true },
+  hospital: { type: String, required: true },
+  // isEmergency: { type: Boolean, required: true },
   bloodGroup: { type: String, required: true },
   plasma: { type: Boolean, required: true },
-  donationTime: { type: Date, required: false },
+  time: { type: Date, required: false },
   donationStatus: {
     type: [donationStatusSchema],
     required: true,

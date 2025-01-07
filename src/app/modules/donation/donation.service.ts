@@ -17,12 +17,12 @@ const createDonation = async (donationData: IDonation) => {
   const data = await donation.save();
 
   // add the donation to the user's donated list
-  await UserModel.findByIdAndUpdate(data.donorId, {
+  await UserModel.findByIdAndUpdate(data.donor, {
     $push: { donated: { $each: [data._id], $position: 0 } },
   }).exec();
 
   // add the donation to the user's received list
-  await UserModel.findByIdAndUpdate(data.receiverId, {
+  await UserModel.findByIdAndUpdate(data.receiver, {
     $push: { donationReceived: { $each: [data._id], $position: 0 } },
   }).exec();
 
@@ -41,19 +41,18 @@ const getDonationById = async (id: string) => {
 
 // Get Donations by user id
 const getDonationsByUserId = async (id: ObjectId) => {
-  // const donation = await DonationModel.find({
-  //   $or: [{ receiverId: id }, { donorId: id }],
-  // }).exec();
-
   // find donations where the user is the donor
-  const donationsAsDonor = await DonationModel.find({ donorId: id }).exec();
+  const donationsAsDonor = await DonationModel.find({ donor: id }).exec();
 
   // find donations where the user is the receiver
   const donationsAsReceiver = await DonationModel.find({
-    receiverId: id,
+    receiver: id,
   }).exec();
 
-  const donation = donationsAsDonor.concat(donationsAsReceiver);
+  const donation = {
+    donationsAsDonor,
+    donationsAsReceiver,
+  };
 
   return donation;
 };

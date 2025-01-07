@@ -6,10 +6,10 @@ import { Types } from "mongoose";
 
 // Create a new Donation
 const createDonation = catchAsyncFunc(async (req, res) => {
-  const donorId = new Types.ObjectId(req.body.donorId);
-  const receiverId = new Types.ObjectId(req.body.receiverId);
+  const donor = new Types.ObjectId(req.body.donor);
+  const receiver = new Types.ObjectId(req.body.receiver);
 
-  const donationData = { ...req.body, donorId, receiverId } as IDonation;
+  const donationData = { ...req.body, donor, receiver } as IDonation;
 
   const donation = await DonationService.createDonation(donationData);
 
