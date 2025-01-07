@@ -16,12 +16,12 @@ const donationRequest = async (requestData: IRequest) => {
   const data = await request.save();
 
   // add the request to the user's requested list
-  await UserModel.findByIdAndUpdate(data.receiverId, {
+  await UserModel.findByIdAndUpdate(data.receiver, {
     $push: { requestRequested: { $each: [data._id], $position: 0 } },
   }).exec();
 
   // add the request to the user's received list
-  await UserModel.findByIdAndUpdate(data.donorId, {
+  await UserModel.findByIdAndUpdate(data.donor, {
     $push: { requestReceived: { $each: [data._id], $position: 0 } },
   }).exec();
 
@@ -36,16 +36,11 @@ const getAllRequests = async () => {
 
 // Get requests by user id
 const getRequestsByUserId = async (id: ObjectId) => {
-  // find from both receiverId and donorId
-  // const request = await RequestModel.find({
-  //   $or: [{ receiverId: id }, { donorId: id }],
-  // });
-
   // find from receiverId
-  const received = await RequestModel.find({ receiverId: id });
+  const requested = await RequestModel.find({ receiver: id });
 
   // find from donorId
-  const requested = await RequestModel.find({ donorId: id });
+  const received = await RequestModel.find({ donor: id });
 
   const request = {
     received,

@@ -9,8 +9,8 @@ export type IRequestStatus = {
 };
 
 export type IRequest = {
-  receiverId: ObjectId;
-  donorId: ObjectId;
+  receiver: ObjectId;
+  donor: ObjectId;
   bloodGroup: (typeof BloodGroup)[keyof typeof BloodGroup];
   plasma: boolean;
   // isEmergency: boolean;

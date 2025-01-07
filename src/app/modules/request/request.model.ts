@@ -18,8 +18,8 @@ const statusSchema = new Schema({
 
 // Mongoose Schema for Request
 const requestSchema = new Schema({
-  receiverId: { type: Schema.Types.ObjectId, ref: "User", required: true },
-  donorId: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  receiver: { type: Schema.Types.ObjectId, ref: "User", required: true },
+  donor: { type: Schema.Types.ObjectId, ref: "User", required: true },
   bloodGroup: {
     type: String,
     enum: [...Object.values(BloodGroup)],
