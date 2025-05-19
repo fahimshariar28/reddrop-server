@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { locationRoute } from "../modules/location/location.route";
 import { userRoute } from "../modules/user/user.route";
 import { requestRoute } from "../modules/request/request.route";
 import { donationRoute } from "../modules/donation/donation.router";
@@ -7,6 +6,9 @@ import { feedbackRoute } from "../modules/feedback/feedback.route";
 import { notificationRoute } from "../modules/notification/notification.route";
 import { badgeRoute } from "../modules/badge/badge.route";
 import { collaboratorRoute } from "../modules/collaborators/collaborators.route";
+import { divisionRoute } from "../modules/location/division/division.route";
+import { districtRoute } from "../modules/location/district/district.route";
+import { upazilaRoute } from "../modules/location/upazila/upazila.route";
 export const router = Router();
 
 const moduleRoutes = [
@@ -15,8 +17,16 @@ const moduleRoutes = [
     route: collaboratorRoute,
   },
   {
-    path: "/location",
-    route: locationRoute,
+    path: "/division",
+    route: divisionRoute,
+  },
+  {
+    path: "/district",
+    route: districtRoute,
+  },
+  {
+    path: "/upazila",
+    route: upazilaRoute,
   },
   {
     path: "/user",
