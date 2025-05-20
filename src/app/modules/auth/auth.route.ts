@@ -24,4 +24,10 @@ router.put(
   AuthController.changePassword
 );
 
+// Route to send forgot password token
+router.post("/forgot-password-token", AuthController.forgotPasswordToken);
+
+// Route to reset password
+router.post("/reset-password", AuthController.resetPassword);
+
 export const AuthRoutes = router;

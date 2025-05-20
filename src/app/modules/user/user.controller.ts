@@ -17,6 +17,32 @@ const createUser = catchAsyncFunc(async (req, res) => {
   });
 });
 
+// Send verification email
+const sendVerificationEmail = catchAsyncFunc(async (req, res) => {
+  const id = req.user.id;
+
+  await UserService.sendVerificationEmail(id);
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Verification email sent successfully",
+  });
+});
+
+// Verify email
+const verifyEmail = catchAsyncFunc(async (req, res) => {
+  const { email } = req.params;
+
+  await UserService.verifyEmail(email);
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: "Email verified successfully",
+  });
+});
+
 // Get all users
 const getAllUsers = catchAsyncFunc(async (req, res) => {
   const users = await UserService.getAllUsers();
@@ -179,6 +205,8 @@ const checkDuplicateUsername = catchAsyncFunc(async (req, res) => {
 
 export const UserController = {
   createUser,
+  sendVerificationEmail,
+  verifyEmail,
   getAllUsers,
   getUsersByFilter,
   getUserById,

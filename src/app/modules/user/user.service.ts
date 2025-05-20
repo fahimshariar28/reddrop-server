@@ -1,6 +1,13 @@
 import UserModel from "./user.model";
 import { IUser } from "./user.interface";
 import { ObjectId } from "mongoose";
+import { sendEmail } from "../../utils/sendEmail";
+import config from "../../config";
+import { createEmailVerificationToken } from "../../helpers/jwtHelper";
+import { emailVerificationBody } from "../../utils/emailBody";
+import GenericError from "../../errors/genericError";
+import httpStatus from "http-status";
+import { emailVerificationSuccessBody } from "../../utils/emailBody";
 
 // Create a new user
 const createUser = async (userData: IUser): Promise<IUser> => {
@@ -16,9 +23,72 @@ const createUser = async (userData: IUser): Promise<IUser> => {
       }
       await referrer.save();
     }
+
+    // send verification email
+    const token = createEmailVerificationToken(
+      user.email,
+      config.emailVerification.token || "",
+      config.emailVerification.expiration || ""
+    );
+
+    const verificationLink = `${config.front_end_url}/verify-email?token=${token}`;
+    const emailBody = emailVerificationBody(user.name, verificationLink);
+
+    await sendEmail(user.email, "Red Drop - Account Verification", emailBody);
   }
 
   return await user.save();
+};
+
+// Send verification email
+const sendVerificationEmail = async (userId: string) => {
+  const user = await UserModel.findById(userId);
+  if (!user) {
+    throw new GenericError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (user.isVerified) {
+    throw new GenericError(httpStatus.BAD_REQUEST, "User already verified");
+  }
+
+  const token = createEmailVerificationToken(
+    user.email,
+    config.emailVerification.token || "",
+    config.emailVerification.expiration || ""
+  );
+
+  const verificationLink = `${config.front_end_url}/verify-email?token=${token}`;
+
+  const emailBody = emailVerificationBody(user.name, verificationLink);
+
+  await sendEmail(user.email, "Red Drop - Account Verification", emailBody);
+};
+
+// Verify email
+const verifyEmail = async (email: string) => {
+  const user = await UserModel.findOne({ email: email });
+  if (!user) {
+    throw new GenericError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  if (user.isVerified) {
+    throw new GenericError(httpStatus.BAD_REQUEST, "User already verified");
+  }
+
+  const updatedUser = await UserModel.findByIdAndUpdate(
+    user._id,
+    { isVerified: true },
+    { new: true }
+  ).select("-password -__v -oldPasswords");
+
+  // send verification email
+  await sendEmail(
+    updatedUser?.email || "",
+    "Red Drop - Account Verification",
+    emailVerificationSuccessBody(updatedUser?.name || "")
+  );
+
+  return updatedUser;
 };
 
 // Get all users
@@ -36,7 +106,11 @@ const getUsersByFilter = async (filter: Partial<IUser>) => {
   const threeMonthsAgo = new Date();
   threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
 
-  const users = await UserModel.find({ ...filter, isDeleted: false })
+  const users = await UserModel.find({
+    ...filter,
+    isVerified: true,
+    isDeleted: false,
+  })
     .select(
       "-password -__v -oldPasswords -isDeleted -socialLink -reference -refereed -socialLogin -role -needPasswordReset -createdAt -updatedAt -notifications -permanentAddress"
     )
@@ -175,6 +249,8 @@ const setUserInactive = async (userId: string) => {
 
 export const UserService = {
   createUser,
+  sendVerificationEmail,
+  verifyEmail,
   getAllUsers,
   getUsersByFilter,
   getUserById,

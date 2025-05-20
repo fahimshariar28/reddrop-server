@@ -8,6 +8,16 @@ const router = Router();
 // Route to create a new user
 router.post("/", UserController.createUser);
 
+// Route to send verification email
+router.post(
+  "/send-verification-email",
+  authVerification(ROLE.ADMIN, ROLE.USER),
+  UserController.sendVerificationEmail
+);
+
+// Route to verify email
+router.get("/verify-email/:email", UserController.verifyEmail);
+
 // Route to get all users
 router.get("/", authVerification(ROLE.ADMIN), UserController.getAllUsers);
 

@@ -20,7 +20,7 @@ const authVerification =
       // verify token
       let verifiedUser = null;
 
-      verifiedUser = verifyToken(token, config.jwt_secret as string);
+      verifiedUser = verifyToken(token, config.jwt.jwt_secret as string);
 
       req.user = verifiedUser; // set user in request object
 

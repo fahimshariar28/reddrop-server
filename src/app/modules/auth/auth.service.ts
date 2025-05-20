@@ -9,8 +9,14 @@ import {
   ILoginUserResponse,
   IRefreshTokenResponse,
 } from "./auth.interface";
-import { createToken, verifyToken } from "../../helpers/jwtHelper";
+import {
+  createToken,
+  forgetPasswordToken,
+  verifyToken,
+} from "../../helpers/jwtHelper";
 import { hashPasswordHelper } from "../../helpers/hashPasswordHelper";
+import { forgetPasswordBody, resetPasswordBody } from "../../utils/emailBody";
+import { sendEmail } from "../../utils/sendEmail";
 
 // Login a user
 const userLogin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
@@ -52,15 +58,15 @@ const userLogin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
   // Access Token
   const accessToken = createToken(
     jwtPayload,
-    config.jwt_secret as string,
-    config.jwt_expires_in as string
+    config.jwt.jwt_secret as string,
+    config.jwt.jwt_expires_in as string
   );
 
   // Refresh Token
   const refreshToken = createToken(
     jwtPayload,
-    config.jwt_refresh_secret as string,
-    config.jwt_refresh_expires_in as string
+    config.jwt.jwt_refresh_secret as string,
+    config.jwt.jwt_refresh_expires_in as string
   );
 
   //   console.log(accessToken, refreshToken);
@@ -69,7 +75,7 @@ const userLogin = async (payload: ILoginUser): Promise<ILoginUserResponse> => {
 
 // Refresh the access token
 const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
-  const decoded = verifyToken(token, config.jwt_refresh_secret as string);
+  const decoded = verifyToken(token, config.jwt.jwt_refresh_secret as string);
   const user = await UserModel.findById(decoded.id);
   if (!user) {
     throw new GenericError(httpStatus.NOT_FOUND, "User not found");
@@ -84,8 +90,8 @@ const refreshToken = async (token: string): Promise<IRefreshTokenResponse> => {
 
   const accessToken = createToken(
     jwtPayload,
-    config.jwt_secret as string,
-    config.jwt_expires_in as string
+    config.jwt.jwt_secret as string,
+    config.jwt.jwt_expires_in as string
   );
 
   return { accessToken };
@@ -165,9 +171,96 @@ const changePassword = async (
   return true;
 };
 
+// Forgot password token
+const forgotPasswordToken = async (email: string) => {
+  const user = await UserModel.findOne({ email })
+    .select("name email isDeleted")
+    .lean();
+  if (!user) {
+    throw new GenericError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // Check if the user is deleted
+  if (user?.isDeleted) {
+    throw new GenericError(httpStatus.UNAUTHORIZED, "User is deleted");
+  }
+
+  // Token for password reset
+  const token = forgetPasswordToken(
+    user._id.toString(),
+    config.passwordReset.secret as string,
+    config.passwordReset.expiration as string
+  );
+
+  // Reset password link
+  const resetPasswordLink = `${config.front_end_url}/reset-password?email=${user.email}&token=${token}`;
+
+  // Email Body
+  const emailBody = forgetPasswordBody(user.name, resetPasswordLink);
+
+  // Send the token to the user's email
+  await sendEmail(user.email, "Red Drop - Forgot Password", emailBody);
+
+  return null;
+};
+
+// Reset password
+const resetPassword = async (id: string, password: string) => {
+  const user = await UserModel.findById(id)
+    .select("name email password oldPasswords isDeleted")
+    .lean();
+
+  if (!user) {
+    throw new GenericError(httpStatus.NOT_FOUND, "User not found");
+  }
+
+  // Check if the user is deleted
+  if (user?.isDeleted) {
+    throw new GenericError(httpStatus.UNAUTHORIZED, "User is deleted");
+  }
+
+  const hashedPassword = await hashPasswordHelper(password);
+  // Check if the new password is the same as the old password
+  const oldPasswords = user.oldPasswords || [];
+  const isSamePassword = oldPasswords.some((oldPassword: string) =>
+    bcrypt.compareSync(password, oldPassword)
+  );
+
+  if (isSamePassword) {
+    throw new GenericError(
+      httpStatus.BAD_REQUEST,
+      "New password cannot be the same as the old password"
+    );
+  }
+
+  // Add the old password to the oldPasswords array
+  await UserModel.findByIdAndUpdate(user._id, {
+    $push: { oldPasswords: user.password },
+  }).select("-password -__v");
+
+  // Update the password
+  await UserModel.findByIdAndUpdate(user._id, {
+    password: hashedPassword,
+  }).select("-password -__v");
+
+  // Email Body
+  const emailBody = resetPasswordBody(user.name);
+
+  // Send the confirmation email
+  await sendEmail(
+    user.email,
+    "Red Drop - Password Reset Successful",
+    emailBody
+  );
+
+  return null;
+};
+
 export const AuthService = {
   userLogin,
   refreshToken,
   setPassword,
   changePassword,
+  forgotPasswordToken,
+  resetPassword,
 };

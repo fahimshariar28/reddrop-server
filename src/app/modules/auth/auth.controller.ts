@@ -70,9 +70,38 @@ const changePassword = catchAsyncFunc(async (req, res) => {
   });
 });
 
+// Forgot password token
+const forgotPasswordToken = catchAsyncFunc(async (req, res) => {
+  const { email } = req.body;
+
+  const result = await AuthService.forgotPasswordToken(email);
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: 200,
+    message: "Reset password token sent to your email",
+    data: result,
+  });
+});
+
+// Reset password
+const resetPassword = catchAsyncFunc(async (req, res) => {
+  const { id, password } = req.body;
+
+  await AuthService.resetPassword(id, password);
+
+  sendResponseMessage(res, {
+    success: true,
+    statusCode: 200,
+    message: "Password reset successfully",
+  });
+});
+
 export const AuthController = {
   loginUser,
   refreshToken,
   setPassword,
   changePassword,
+  forgotPasswordToken,
+  resetPassword,
 };
